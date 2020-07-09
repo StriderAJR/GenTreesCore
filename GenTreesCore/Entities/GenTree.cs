@@ -13,6 +13,6 @@ namespace GenTreesCore.Entities
         public List<Person> Persons { get; set; }
 
         public GenTreeDateTimeSetting DateTimeSettings { get; set; }
-        public List<CustomPersonDescription> CustomPersonDescriptions { get; set; }
+        public List<CustomPersonDescriptionTemplate> CustomPersonDescriptionTemplates { get; set; }
     }
 }
