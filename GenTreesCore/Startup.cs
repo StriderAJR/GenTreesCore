@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using JavaScriptEngineSwitcher.V8;
 using JavaScriptEngineSwitcher.Extensions.MsDependencyInjection;
 using React.AspNet;
@@ -33,6 +34,10 @@ namespace GenTreesCore
             // Make sure a JS engine is registered, or you will get an error!
             services.AddJsEngineSwitcher(options => options.DefaultEngineName = V8JsEngine.EngineName)
                 .AddV8();
+
+            string connection = Configuration.GetConnectionString("DefaultConnection");
+            services.AddDbContext<Models.ApplicationContext>(options =>
+                options.UseSqlServer(connection));
 
             services.AddControllersWithViews();
         }
