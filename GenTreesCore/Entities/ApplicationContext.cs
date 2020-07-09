@@ -1,13 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace GenTreesCore.Models
+namespace GenTreesCore.Entities
 {
     public class ApplicationContext : DbContext
     {
         public ApplicationContext(DbContextOptions<ApplicationContext> options)
             : base(options)
         {
-            var b = Database.CanConnect();
+            if (!Database.CanConnect())
+                throw new System.Exception("No connection to server");
         }
     }
 }

@@ -36,7 +36,7 @@ namespace GenTreesCore
                 .AddV8();
 
             string connection = Configuration.GetConnectionString("DefaultConnection");
-            services.AddDbContext<Models.ApplicationContext>(options =>
+            services.AddDbContext<Entities.ApplicationContext>(options =>
                 options.UseSqlServer(connection));
 
             services.AddControllersWithViews();
