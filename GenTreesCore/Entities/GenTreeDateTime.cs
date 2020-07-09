@@ -33,6 +33,8 @@ namespace GenTreesCore.Entities
     /// </summary>
     public class GenTreeDateTimeSetting
     {
+        public int Id { get; set; }
+        public string Name { get; set; }
         public List<GenTreeEra> Eras { get; set; }
         /// <summary>
         /// Кол-во месяцев в году

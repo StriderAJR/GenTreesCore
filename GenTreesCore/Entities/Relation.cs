@@ -7,6 +7,7 @@ namespace GenTreesCore.Entities
 {
     public abstract class Relation
     {
+        public int Id { get; set; }
         /// <summary>
         /// Человек, к которому применяется данное родство
         /// </summary>
