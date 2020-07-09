@@ -12,6 +12,9 @@ namespace GenTreesCore.Entities
         public string Description { get; set; }
         public List<Person> Persons { get; set; }
 
+        public User Owner { get; set; }
+        public bool IsPrivate { get; set; }
+
         public GenTreeDateTimeSetting DateTimeSettings { get; set; }
         public List<CustomPersonDescriptionTemplate> CustomPersonDescriptionTemplates { get; set; }
     }
