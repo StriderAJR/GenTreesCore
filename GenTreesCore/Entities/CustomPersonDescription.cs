@@ -8,6 +8,7 @@ namespace GenTreesCore.Entities
 {
     public class CustomPersonDescription
     {
+        public int Id { get; set; }
         public string Name { get; set; }
         public object Value { get; set; }
     }
