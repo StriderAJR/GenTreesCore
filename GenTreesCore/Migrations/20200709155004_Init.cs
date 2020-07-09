@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using GenTreesCore.Entities;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace GenTreesCore.Migrations
 {
@@ -90,48 +91,23 @@ namespace GenTreesCore.Migrations
                {
                    Id = table.Column<int>(),
                    SourcePerson = table.Column<int>(),
-                   TargetPerson = table.Column<int>()
+                   TargetPerson = table.Column<int>(),
+                   RelationType = table.Column<string>(maxLength: 100),
+                   IsFinished = table.Column<bool>(nullable: true),
+                   SecondParent = table.Column<int>(nullable: true),
+                   RelationRate = table.Column<string>(nullable: true)
                },
                constraints: table =>
                {
                    table.PrimaryKey("PK_Relations", t => t.Id);
                    table.ForeignKey("FK_Relations_Persons_SourcePerson", t => t.SourcePerson, "Persons", "Id");
                    table.ForeignKey("FK_Relations_Persons_TargetPerson", t => t.TargetPerson, "Persons", "Id");
-               });
-
-            migrationBuilder.CreateTable(
-               name: "SpouseRelations",
-               columns: table => new
-               {
-                   RelationId = table.Column<int>(),
-                   IsFinished = table.Column<bool>()
-               },
-               constraints: table =>
-               {
-                   table.PrimaryKey("PK_SpouseRelations", t => t.RelationId);
-                   table.ForeignKey("FK_SpouseRelations_Relations", t => t.RelationId, "Relations", "Id");
-               });
-
-            migrationBuilder.CreateTable(
-               name: "ChildRelations",
-               columns: table => new
-               {
-                   RelationId = table.Column<int>(),
-                   SecondParent = table.Column<int>(nullable: true),
-                   RelationRate = table.Column<string>()
-               },
-               constraints: table =>
-               {
-                   table.PrimaryKey("PK_ChildRelations", t => t.RelationId);
-                   table.ForeignKey("FK_ChildRelations_Relations", t => t.RelationId, "Relations", "Id");
-                   table.ForeignKey("FK_ChildRelations_Relations_SecondParent", t => t.RelationId, "Persons", "Id");
+                   table.ForeignKey("FK_Relations_Persons_SecondParent", t => t.SecondParent, "Persons", "Id");
                });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable("SpouseRelations");
-            migrationBuilder.DropTable("ChildRelations");
             migrationBuilder.DropTable("Relations");
             migrationBuilder.DropTable("CustomPersonDescriptions");
             migrationBuilder.DropTable("Persons");
