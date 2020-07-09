@@ -10,6 +10,7 @@ namespace GenTreesCore.Entities
     public class ApplicationContext : DbContext
     {
         DbSet<GenTree> GenTrees { get; set; }
+        DbSet<User> Users { get; set; }
         public ApplicationContext(DbContextOptions<ApplicationContext> options)
             : base(options)
         {
