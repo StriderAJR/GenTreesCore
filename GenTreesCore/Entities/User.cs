@@ -12,8 +12,15 @@ namespace GenTreesCore.Entities
         public string Email { get; set; }
         public bool EmailConfirmed { get; set; }
         public DateTime DateCreated { get; set; }
-        public DateTime LastVisited { get; set; }
+        public DateTime LastVisit { get; set; }
         public bool IsAdmin { get; set; }
+        //public string Role { get; set }
 
+    }
+
+    public enum Role
+    {
+        User,
+        Admin
     }
 }
