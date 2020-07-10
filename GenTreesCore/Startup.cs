@@ -57,6 +57,8 @@ namespace GenTreesCore
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                //the next line is the only new one. The rest of the method may look different depending on your setup
+                // app.UseWebpackDevMiddleware(new Microsoft.AspNetCore.SpaServices.Webpack.WebpackDevMiddlewareOptions { HotModuleReplacement = true });
             }
             else
             {

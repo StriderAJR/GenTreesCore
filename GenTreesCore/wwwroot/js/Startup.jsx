@@ -1,4 +1,6 @@
-﻿function App() {
+﻿import './GenTree'
+
+function App() {
     return (
         <div className="container">
             <Heading />
