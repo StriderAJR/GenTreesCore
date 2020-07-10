@@ -34,5 +34,16 @@ namespace GenTreesCore.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+        public IActionResult TestTree()
+        {
+            return View();
+        }
+
+        public JsonResult GetTestTree()
+        {
+            var genTree = DbProvider.GetTestGenTree();
+            return new JsonResult(genTree);
+        }
     }
 }
