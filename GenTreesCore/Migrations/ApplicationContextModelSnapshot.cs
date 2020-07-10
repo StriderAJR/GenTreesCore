@@ -77,12 +77,20 @@ namespace GenTreesCore.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("IsPrivate")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("OwnerId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("DateTimeSettingsId");
+
+                    b.HasIndex("OwnerId");
 
                     b.ToTable("GenTrees");
                 });
@@ -169,6 +177,42 @@ namespace GenTreesCore.Migrations
                     b.HasDiscriminator<string>("RelationType").HasValue("Relation");
                 });
 
+            modelBuilder.Entity("GenTreesCore.Entities.User", b =>
+                {
+                    b.Property<int?>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsAdmin")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("LastVisit")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Login")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Salt")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Users");
+                });
+
             modelBuilder.Entity("GenTreesCore.Entities.ChildRelation", b =>
                 {
                     b.HasBaseType("GenTreesCore.Entities.Relation");
@@ -217,6 +261,10 @@ namespace GenTreesCore.Migrations
                     b.HasOne("GenTreesCore.Entities.GenTreeDateTimeSetting", "DateTimeSettings")
                         .WithMany()
                         .HasForeignKey("DateTimeSettingsId");
+
+                    b.HasOne("GenTreesCore.Entities.User", "Owner")
+                        .WithMany()
+                        .HasForeignKey("OwnerId");
                 });
 
             modelBuilder.Entity("GenTreesCore.Entities.Person", b =>
