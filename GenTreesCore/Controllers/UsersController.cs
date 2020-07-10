@@ -39,6 +39,7 @@ namespace GenTreesCore.Controllers
                 User user = userService.LogIn(model.Login, model.Password);
                 if (user != null)
                 {
+                    await db.SaveChangesAsync();
                     await Authenticate(model.Login); // аутентификация
                     return RedirectToAction("Index", "Home"); //возвращение на домашнюю страницу
                 }
@@ -108,6 +109,8 @@ namespace GenTreesCore.Controllers
             }
             return View(model);
         }
+
+      
 
         private async Task Authenticate(string login)
         {

@@ -72,6 +72,8 @@ namespace GenTreesCore.Services
             if (user.PasswordHash != hash)
                 return null;
 
+            user.LastVisit = DateTime.Now;
+            _db.Users.Update(user);
             return user;
         }
         private string GenerateSalt()
