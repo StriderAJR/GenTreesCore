@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.EntityFrameworkCore.Migrations;
 using System;
 
 namespace GenTreesCore.Migrations
@@ -40,6 +41,7 @@ namespace GenTreesCore.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropForeignKey("FK_GenTrees_Users", "GenTrees");
             migrationBuilder.DropColumn("Owner", table: "GenTrees");
             migrationBuilder.DropColumn("IsPrivate", table: "GenTrees");
 
