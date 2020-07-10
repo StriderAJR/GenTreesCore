@@ -10,9 +10,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Components.Authorization;
 using JavaScriptEngineSwitcher.V8;
 using JavaScriptEngineSwitcher.Extensions.MsDependencyInjection;
 using React.AspNet;
+using GenTreesCore.Services;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace GenTreesCore
 {
@@ -38,6 +41,12 @@ namespace GenTreesCore
             string connection = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<Entities.ApplicationContext>(options =>
                 options.UseSqlServer(connection));
+
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(options => //CookieAuthenticationOptions
+                {
+                    options.LoginPath = new Microsoft.AspNetCore.Http.PathString("/Users/Login");
+                });
 
             services.AddControllersWithViews();
         }
@@ -80,6 +89,8 @@ namespace GenTreesCore
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 

@@ -34,7 +34,6 @@ namespace GenTreesCore.Services
             _db.Users.Add(
                 new User
                 {
-                    Id = 1,
                     Login = login,
                     PasswordHash = hash,
                     Salt = salt,
