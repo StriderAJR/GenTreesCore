@@ -1,4 +1,4 @@
-﻿using GenTreesCore.Entities;
+﻿using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace GenTreesCore.Migrations
@@ -12,7 +12,8 @@ namespace GenTreesCore.Migrations
                name: "GenTreeDateTimeSettings",
                columns: table => new
                {
-                   Id = table.Column<int>(),
+                   Id = table.Column<int>()
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                    Name = table.Column<string>(maxLength: 100),
                    YearMonthCount = table.Column<int>(),
                    Eras_json = table.Column<string>()
@@ -26,7 +27,8 @@ namespace GenTreesCore.Migrations
                 name: "GenTrees",
                 columns: table => new
                 {
-                    Id = table.Column<int>(),
+                    Id = table.Column<int>()
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(),
                     Description = table.Column<string>(nullable: true),
                     DateTimeSetting = table.Column<int>()
@@ -41,7 +43,8 @@ namespace GenTreesCore.Migrations
                name: "Persons",
                columns: table => new
                {
-                   Id = table.Column<int>(),
+                   Id = table.Column<int>()
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                    GenTree = table.Column<int>(),
                    LastName = table.Column<string>(maxLength: 80),
                    FirstName = table.Column<string>(maxLength: 80),
@@ -61,7 +64,8 @@ namespace GenTreesCore.Migrations
               name: "CustomPersonDescriptionTemplates",
               columns: table => new
               {
-                  Id = table.Column<int>(),
+                  Id = table.Column<int>()
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                   GenTree = table.Column<int>(),
                   Name = table.Column<string>(maxLength: 100)
               },
@@ -75,7 +79,8 @@ namespace GenTreesCore.Migrations
               name: "CustomPersonDescriptions",
               columns: table => new
               {
-                  Id = table.Column<int>(),
+                  Id = table.Column<int>()
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                   Template = table.Column<int>(),
                   Value = table.Column<string>()
               },
@@ -89,7 +94,8 @@ namespace GenTreesCore.Migrations
                name: "Relations",
                columns: table => new
                {
-                   Id = table.Column<int>(),
+                   Id = table.Column<int>()
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                    SourcePerson = table.Column<int>(),
                    TargetPerson = table.Column<int>(),
                    RelationType = table.Column<string>(maxLength: 100),
