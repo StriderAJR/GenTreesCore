@@ -14,6 +14,7 @@ namespace GenTreesCore.Services
         User LogIn(string login, string password);
         bool LoginIsRegistered(string login);
         bool EmailIsRegistered(string email);
+        bool EmailIsConfirmed(string login);
     }
 
     /// <summary>
@@ -54,6 +55,10 @@ namespace GenTreesCore.Services
         public bool EmailIsRegistered(string email)
         {
             return _db.Users.FirstOrDefault(x => x.Email == email) != null;
+        }
+        public bool EmailIsConfirmed(string login)
+        {
+            return _db.Users.FirstOrDefault(x => x.Login == login && x.EmailConfirmed) != null;
         }
 
         public User LogIn(string login, string password)

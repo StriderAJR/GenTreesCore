@@ -84,6 +84,31 @@ namespace GenTreesCore.Controllers
             return View(model);
         }
 
+        [HttpGet]
+        public IActionResult ForgotPassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                if (!userService.EmailIsConfirmed(model.Login))
+                {
+                    ModelState.AddModelError("Login", "Пользователя не существует или Email пользователя не был подтвержден");
+                }
+                else
+                {
+                    //TODO: новый пароль на email
+                    ModelState.AddModelError("Login", "Данная функция недоступна, свяжитесь с администратором сайта");
+                }
+            }
+            return View(model);
+        }
+
         private async Task Authenticate(string login)
         {
             // создаем один claim
