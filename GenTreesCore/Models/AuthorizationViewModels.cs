@@ -21,7 +21,7 @@ namespace GenTreesCore.Models
         [Required(ErrorMessage = "Не указан логин.")]
         public string Login { get; set; }
         [Required(ErrorMessage = "Не указан Email.")]
-        [EmailAddress]
+        [EmailAddress(ErrorMessage = "Email указан неправильно")]
         public string Email { get; set; }
 
         [Required(ErrorMessage = "Не указан пароль.")]

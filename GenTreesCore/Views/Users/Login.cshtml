@@ -2,7 +2,7 @@
 
 <h2>Вход на сайт</h2>
 
-<a asp-action="Register" asp-controller="Users"  class="btn btn-outline-dark" >Регистрация</a>
+<a asp-action="Register" asp-controller="Users"  class="btn btn-outline-dark" >Зарегистрироваться</a>
 
 <form asp-action="Login" asp-controller="Users" asp-anti-forgery="true">
     <div class="validation" asp-validation-summary="ModelOnly" />
@@ -18,7 +18,8 @@
             <span asp-validation-for="Password" />
         </div>
         <div class="form-group">
-            <input type="submit" value="Войти" class="btn btn-outline-dark" />
+            <input type="submit" value="Войти" class="btn btn-outline-dark" /><br />
+            @Html.ValidationMessageFor(m => m.Login)
         </div>
     </div>
 </form>

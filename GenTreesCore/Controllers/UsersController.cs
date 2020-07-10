@@ -40,10 +40,12 @@ namespace GenTreesCore.Controllers
                 if (user != null)
                 {
                     await Authenticate(model.Login); // аутентификация
-
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Index", "Home"); //возвращение на домашнюю страницу
                 }
-                ModelState.AddModelError("", "Некорректные логин и(или) пароль");
+                else
+                {
+                    ModelState.AddModelError("Login", "Некорректные логин и(или) пароль");
+                }
             }
             return View(model);
         }
@@ -60,19 +62,24 @@ namespace GenTreesCore.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (!userService.IsRegistered(model.Login))
+                if (userService.LoginIsRegistered(model.Login))
+                {
+                    ModelState.AddModelError("Login", "Пользователь с таким логином уже существует");
+                }
+                else if (userService.EmailIsRegistered(model.Email))
+                {
+                    ModelState.AddModelError("Email", "Email уже зарегистрирован");
+                }
+                else
                 {
                     // добавляем пользователя в бд
                     userService.Register(model.Login, model.Email, model.Password);
 
                     await db.SaveChangesAsync();
-
                     await Authenticate(model.Login); // аутентификация
 
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Index", "Home"); //возвращение на домашню страницу
                 }
-                else
-                    ModelState.AddModelError("", "Пользователь с таким логином уже существует");
             }
             return View(model);
         }

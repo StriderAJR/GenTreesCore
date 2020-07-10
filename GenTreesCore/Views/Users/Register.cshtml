@@ -9,11 +9,13 @@
             <label asp-for="Login">Введите логин</label><br />
             <input type="text" asp-for="Login" />
             <span asp-validation-for="Login" />
+            @Html.ValidationMessageFor(m => m.Login)
         </div>
         <div>
             <label asp-for="Email">Введите Email</label><br />
             <input type="text" asp-for="Email" />
             <span asp-validation-for="Email" />
+            @Html.ValidationMessageFor(m => m.Email)
         </div>
         <div>
             <label asp-for="Password">Введите пароль</label><br />
@@ -24,6 +26,7 @@
             <label asp-for="ConfirmPassword">Повторите пароль</label><br />
             <input asp-for="ConfirmPassword" />
             <span asp-validation-for="ConfirmPassword" />
+            @Html.ValidationMessageFor(m => m.ConfirmPassword)
         </div>
         <div>
             <input type="submit" value="Зарегистрироваться" />
