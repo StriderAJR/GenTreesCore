@@ -1,8 +1,6 @@
 ﻿@model IEnumerable<GenTreesCore.Models.GenTreeListItemViewModel>
-@{
-    ViewBag.Title = "Деревья";
-}
 <a asp-action="Index" asp-controller="Home">На главную</a>
+<h2>Мои деревья</h2>
 <ul class="list-group">
     @foreach (var tree in Model)
     {
