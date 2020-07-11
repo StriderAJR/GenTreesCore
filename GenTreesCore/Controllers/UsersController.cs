@@ -114,10 +114,11 @@ namespace GenTreesCore.Controllers
 
         private async Task Authenticate(string login)
         {
+            var userId = db.Users.FirstOrDefault(u => u.Login == login).Id;
             // создаем один claim
             var claims = new List<Claim>
             {
-                new Claim(ClaimsIdentity.DefaultNameClaimType, login)
+                new Claim(ClaimsIdentity.DefaultNameClaimType, userId.ToString())
             };
             // создаем объект ClaimsIdentity
             ClaimsIdentity id = new ClaimsIdentity(claims, "ApplicationCookie", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
