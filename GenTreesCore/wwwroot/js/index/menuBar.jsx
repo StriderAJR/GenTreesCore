@@ -14,7 +14,7 @@
                     <ul className="nav nav-pills nav-fill flex-column flex-sm-row mb-3 " id="pills-tab" role="tablist">
                         <li className="nav-item" role="presentation">
                             <a className="flex-sm-fill text-sm-center nav-link active" id="pills-project-tab"
-                               data-toggle="pill" href="#pills-project" role="tab" aria-controls="pills-project"
+                               data-toggle="pill" href="/Home/TestTree" role="tab" aria-controls="pills-project"
                                aria-selected="true">About project</a>
                         </li>
                         <li className="nav-item" role="presentation">

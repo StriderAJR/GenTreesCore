@@ -2,9 +2,9 @@ const path = require('path');
 module.exports = {
     mode: 'development',
     entry: {
-        main: './wwwroot/js/app.jsx',
         index: './wwwroot/js/index/index.jsx',
-        login: './wwwroot/js/login/login.jsx'
+        login: './wwwroot/js/login/login.jsx',
+        testTree: './wwwroot/js/testTree/testTree.jsx'
     },
     output: {
         path: path.resolve(__dirname, './wwwroot/js/dist'),

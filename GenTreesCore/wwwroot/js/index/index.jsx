@@ -6,12 +6,12 @@ class IndexPage extends React.Component {
     render() {
         return (
             <div className="container">
-                <Heading />
-                <MenuBar />
+                <Heading/>
+                <MenuBar/>
                 <MainArea
                     name={testData.name}
                     text={testData.text}
-                    imgUrl={testData.imgUrl} />
+                    imgUrl={testData.imgUrl}/>
 
             </div>
         );
