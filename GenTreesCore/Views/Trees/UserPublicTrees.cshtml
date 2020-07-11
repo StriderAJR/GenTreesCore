@@ -1,0 +1,16 @@
+﻿@using GenTreesCore.Models;
+@model UserPublicInfo
+<a asp-action="Public" asp-controller="Trees">Все деревья</a>
+<h2>Деревья пользователя @Model.Login</h2>
+@Html.ValidationMessageFor(m => m.Login)
+<ul class="list-group">
+    @if (Model.PublicGenTrees != null)
+        foreach (var tree in Model.PublicGenTrees)
+        {
+            <li>
+                <h3>@tree.Name</h3>
+                <p>@tree.Description</p>
+            </li>
+        }
+    @Html.ValidationMessageFor(m => m.PublicGenTrees)
+</ul>

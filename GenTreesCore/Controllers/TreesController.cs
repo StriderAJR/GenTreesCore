@@ -3,6 +3,7 @@ using GenTreesCore.Entities;
 using Microsoft.AspNetCore.Mvc;
 using GenTreesCore.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 
 namespace GenTreesCore.Controllers
 {
@@ -14,7 +15,6 @@ namespace GenTreesCore.Controllers
         {
             db = context;
         }
-
 
         [HttpGet("trees/public")]
         public JsonResult GetPublicTreesList()
