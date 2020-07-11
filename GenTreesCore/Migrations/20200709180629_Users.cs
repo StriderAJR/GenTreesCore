@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Components.Forms;
-using Microsoft.EntityFrameworkCore.Metadata;
+﻿using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using System;
 
@@ -29,23 +28,19 @@ namespace GenTreesCore.Migrations
                     table.PrimaryKey("PK_Users", t => t.Id);
                 });
 
-            migrationBuilder.AddColumn<int>("Owner", table: "GenTrees");
+            migrationBuilder.AddColumn<int>("OwnerId", table: "GenTrees");
 
             migrationBuilder.AddForeignKey(
                 "FK_GenTrees_Users",
                 table: "GenTrees",
-                column: "Owner",
+                column: "OwnerId",
                 principalTable: "Users",
                 principalColumn: "Id");
-
-            migrationBuilder.AddColumn<bool>("IsPrivate", table: "GenTrees");
         }
-
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey("FK_GenTrees_Users", "GenTrees");
-            migrationBuilder.DropColumn("Owner", table: "GenTrees");
-            migrationBuilder.DropColumn("IsPrivate", table: "GenTrees");
+            migrationBuilder.DropColumn("OwnerId", table: "GenTrees");
 
             migrationBuilder.DropTable("Users");
         }
