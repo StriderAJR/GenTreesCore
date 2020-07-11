@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using GenTreesCore.Entities;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using GenTreesCore.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -20,69 +16,56 @@ namespace GenTreesCore.Controllers
             db = context;
         }
 
-        public IActionResult Public()
+        [HttpGet("trees/public")]
+        public JsonResult GetPublicTreesList()
         {
             var trees = db.GenTrees
                 .Where(tree => !tree.IsPrivate)
-                .ToList()
                 .Select(tree => new GenTreeListItemViewModel
                 {
                     Name = tree.Name,
                     Description = tree.Description,
-                    OwnerId = tree.Owner.Id
-                });
+                    Creator = tree.Owner.Login
+                })
+                .ToList();
 
-            return View(trees);
-        }
-
-        public IActionResult UserPublicTrees(int id)
-        {
-            //Получаем пользователя по его id
-            var user = db.Users.Where(u => u.Id == id).FirstOrDefault();
-
-            //если пользователь был найден, передаем данные в модель
-            if (user != null)
-            {
-                //получаем список публичных деревьев пользователя
-                var trees = db.GenTrees
-                    .Where(tree => !tree.IsPrivate && tree.Owner.Id == id)
-                    .ToList();
-                //если список пустой выводим сообщение
-                if (trees.Count == 0)
-                    ModelState.AddModelError("PublicGenTrees", "У пользователя пока нет деревьев");
-
-                //возвращаем модель с данными
-                return View(new UserPublicInfo{Login = user.Login,PublicGenTrees = trees});
-            }
-            else
-            {
-                ModelState.AddModelError("Login", "Пользователя не существует");
-                return View(new UserPublicInfo());
-            } 
+            return Json(trees);
         }
 
         [Authorize]
-        public IActionResult My()
+        [HttpGet("trees/my")]
+        public JsonResult GetMyTreesList()
         {
+            //получаем id авторизованного пользователя
             var id = int.Parse(HttpContext.User.Identity.Name);
-
-            //получаем список всех деревьев текущего пользователя
+            //получаем список всех его деревьев
             var trees = db.GenTrees
                 .Where(tree => tree.Owner.Id == id)
-                .ToList();
-
-            //если список пустой выводим сообщение
-            if (trees.Count == 0)
-                ModelState.AddModelError("PublicGenTrees", "У вас пока нет деревьев");
-
-            //возвращаем модель с данными
-            return View(trees
                 .Select(tree => new GenTreeListItemViewModel
                 {
                     Name = tree.Name,
                     Description = tree.Description,
-                    OwnerId = tree.Owner.Id
-                }));
+                    Creator = tree.Owner.Login
+                })
+                .ToList();
+
+            return Json(trees);
+        }
+
+        [HttpGet("trees/user")]
+        public JsonResult GetUserPublicTrees(string login)
+        {
+            var trees = db.GenTrees
+                .Where(tree => !tree.IsPrivate && tree.Owner.Login == login)
+                .Select(tree => new GenTreeListItemViewModel
+                {
+                    Name = tree.Name,
+                    Description = tree.Description,
+                    Creator = tree.Owner.Login
+                })
+                .ToList();
+
+            return Json(trees);
         }
     }
 }
