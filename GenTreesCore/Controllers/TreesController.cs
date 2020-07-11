@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using GenTreesCore.Entities;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using GenTreesCore.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace GenTreesCore.Controllers
 {
@@ -18,18 +15,57 @@ namespace GenTreesCore.Controllers
             db = context;
         }
 
-        public IActionResult PublicTrees()
+
+        [HttpGet("trees/public")]
+        public JsonResult GetPublicTreesList()
         {
             var trees = db.GenTrees
                 .Where(tree => !tree.IsPrivate)
-                .ToList()
                 .Select(tree => new GenTreeListItemViewModel
                 {
                     Name = tree.Name,
                     Description = tree.Description,
-                });
+                    Creator = tree.Owner.Login
+                })
+                .ToList();
 
-            return View(trees);
+            return Json(trees);
+        }
+
+        [Authorize]
+        [HttpGet("trees/my")]
+        public JsonResult GetMyTreesList()
+        {
+            //получаем id авторизованного пользователя
+            var id = int.Parse(HttpContext.User.Identity.Name);
+            //получаем список всех его деревьев
+            var trees = db.GenTrees
+                .Where(tree => tree.Owner.Id == id)
+                .Select(tree => new GenTreeListItemViewModel
+                {
+                    Name = tree.Name,
+                    Description = tree.Description,
+                    Creator = tree.Owner.Login
+                })
+                .ToList();
+
+            return Json(trees);
+        }
+
+        [HttpGet("trees/user")]
+        public JsonResult GetUserPublicTrees(string login)
+        {
+            var trees = db.GenTrees
+                .Where(tree => !tree.IsPrivate && tree.Owner.Login == login)
+                .Select(tree => new GenTreeListItemViewModel
+                {
+                    Name = tree.Name,
+                    Description = tree.Description,
+                    Creator = tree.Owner.Login
+                })
+                .ToList();
+
+            return Json(trees);
         }
     }
 }
