@@ -88,7 +88,7 @@ namespace GenTreesCore.Controllers
             return Json(trees);
         }
 
-        [HttpGet("trees/gentree/{id}")]
+        [HttpGet("trees/gentree")]
         public IActionResult GetGenTree(int id)
         {
             int? authorizedUserId = null;
@@ -113,7 +113,7 @@ namespace GenTreesCore.Controllers
 
 
             if (tree == null)
-                return RedirectToAction("Error", "Home", "?id=??");
+                return Content($"no tree with id {id} found");
             return Json(tree);
         }
     }
