@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using GenTreesCore.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.ClearScript;
+using Microsoft.EntityFrameworkCore;
 
 namespace GenTreesCore.Controllers
 {
@@ -55,10 +57,10 @@ namespace GenTreesCore.Controllers
         public JsonResult GetMyTreesList()
         {
             //получаем id авторизованного пользователя
-            var id = int.Parse(HttpContext.User.Identity.Name);
+            var authorizedUserId = int.Parse(HttpContext.User.Identity.Name);
             //получаем список всех его деревьев
             var trees = db.GenTrees
-                .Where(tree => tree.Owner.Id == id)
+                .Where(tree => tree.Owner.Id == authorizedUserId)
                 .Select(tree => new GenTreeListItemViewModel
                 {
                     Name = tree.Name,
@@ -84,6 +86,35 @@ namespace GenTreesCore.Controllers
                 .ToList();
 
             return Json(trees);
+        }
+
+        [HttpGet("trees/gentree/{id}")]
+        public IActionResult GetGenTree(int id)
+        {
+            int? authorizedUserId = null;
+            if (HttpContext.User.Identity.IsAuthenticated)
+                authorizedUserId = int.Parse(HttpContext.User.Identity.Name);
+
+            var tree = db.GenTrees
+                .Include(t => t.Persons)
+                    .ThenInclude(p => p.CustomDescriptions)
+                        .ThenInclude(p => p.Template)
+                .Include(t => t.Persons)
+                    .ThenInclude(p => p.Relations)
+                .Include(t => t.GenTreeDateTimeSetting)
+                .Include(t => t.CustomPersonDescriptionTemplates)
+                .Where(t => !t.IsPrivate && t.Id == id)
+                .Select(t => new GenTreeViewModel
+                {
+                    GenTree = t,
+                    CanEdit = authorizedUserId != null && t.Owner.Id == authorizedUserId
+                })
+                .FirstOrDefault();
+
+
+            if (tree == null)
+                return RedirectToAction("Error", "Home", "?id=??");
+            return Json(tree);
         }
     }
 }
