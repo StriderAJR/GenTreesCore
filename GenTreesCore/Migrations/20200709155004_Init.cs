@@ -15,7 +15,7 @@ namespace GenTreesCore.Migrations
                    Id = table.Column<int>()
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                    Name = table.Column<string>(maxLength: 100),
-                   YearMonthCount = table.Column<int>(),
+                   YearMonthCount = table.Column<uint>(),
                    Eras_json = table.Column<string>()
                },
                constraints: table =>
@@ -31,13 +31,13 @@ namespace GenTreesCore.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(),
                     Description = table.Column<string>(nullable: true),
-                    DateTimeSettingsId = table.Column<int>(),
+                    GenTreeDateTimeSettingId = table.Column<int>(),
                     IsPrivate = table.Column<bool>()
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_GenTrees", t => t.Id);
-                    table.ForeignKey("FK_GenTrees_DateTimeSettings", t => t.DateTimeSettingsId, "GenTreeDateTimeSettings", "Id");
+                    table.ForeignKey("FK_GenTrees_DateTimeSettings", t => t.GenTreeDateTimeSettingId, "GenTreeDateTimeSettings", "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -82,6 +82,7 @@ namespace GenTreesCore.Migrations
               {
                   Id = table.Column<int>()
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                  PersonId = table.Column<int>(),
                   TemplateId = table.Column<int>(),
                   Value = table.Column<string>()
               },
@@ -89,6 +90,7 @@ namespace GenTreesCore.Migrations
               {
                   table.PrimaryKey("PK_CustomPersonsDescriptions", t => t.Id);
                   table.ForeignKey("FK_CustomPersonsDescriptions_Templates", t => t.TemplateId, "CustomPersonDescriptionTemplates", "Id");
+                  table.ForeignKey("FK_CustomPersonsDescriptions_Persons", t => t.PersonId, "Persons", "Id");
               });
 
             migrationBuilder.CreateTable(

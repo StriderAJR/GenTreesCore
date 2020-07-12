@@ -1,5 +1,6 @@
 ﻿using GenTreesCore.Services;
 using Microsoft.EntityFrameworkCore.Migrations;
+using System.ComponentModel.DataAnnotations;
 
 namespace GenTreesCore.Migrations
 {
@@ -14,7 +15,7 @@ namespace GenTreesCore.Migrations
             );
             migrationBuilder.InsertData(
                 "GenTrees",
-                new string[] { "Id", "Name","OwnerId", "DateTimeSettingsId", "IsPrivate"},
+                new string[] { "Id", "Name","OwnerId", "GenTreeDateTimeSettingId", "IsPrivate"},
                 new object[] { 1, "TestGenTree", 1, 1, false}
             );
         }

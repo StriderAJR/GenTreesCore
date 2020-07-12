@@ -63,7 +63,7 @@ namespace GenTreesCore.Migrations
 
                     b.HasIndex("GenTreeId");
 
-                    b.ToTable("CustomPersonDescriptionTemplate");
+                    b.ToTable("CustomPersonDescriptionTemplates");
                 });
 
             modelBuilder.Entity("GenTreesCore.Entities.GenTree", b =>
