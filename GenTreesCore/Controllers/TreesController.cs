@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.ClearScript;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using System.Text.Json;
+using JsonSubTypes;
 
 namespace GenTreesCore.Controllers
 {
@@ -111,10 +114,25 @@ namespace GenTreesCore.Controllers
                 })
                 .FirstOrDefault();
 
-
             if (tree == null)
                 return Content($"no tree with id {id} found");
-            return Json(tree);
+
+            return Ok(ToJson(tree));
+        }
+
+        private string ToJson(GenTreeViewModel tree)
+        {
+            var settings = new JsonSerializerSettings();
+            settings.Converters.Add(JsonSubtypesConverterBuilder
+                .Of(typeof(Relation), "Type")
+                .RegisterSubtype(typeof(ChildRelation), "ChildRelation")
+                .RegisterSubtype(typeof(SpouseRelation), "SpouseRelation")
+                .SerializeDiscriminatorProperty()
+                .Build());
+
+            settings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+
+            return JsonConvert.SerializeObject(tree, settings);
         }
     }
 }
