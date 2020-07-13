@@ -41,6 +41,7 @@ namespace GenTreesCore.Controllers
                 .Where(tree => !tree.IsPrivate)
                 .Select(tree => new GenTreeListItemViewModel
                 {
+                    Id = tree.Id,
                     Name = tree.Name,
                     Description = tree.Description,
                     Creator = tree.Owner.Login
@@ -61,6 +62,7 @@ namespace GenTreesCore.Controllers
                 .Where(tree => tree.Owner.Id == id)
                 .Select(tree => new GenTreeListItemViewModel
                 {
+                    Id = tree.Id,
                     Name = tree.Name,
                     Description = tree.Description,
                     Creator = tree.Owner.Login
@@ -77,6 +79,7 @@ namespace GenTreesCore.Controllers
                 .Where(tree => !tree.IsPrivate && tree.Owner.Login == login)
                 .Select(tree => new GenTreeListItemViewModel
                 {
+                    Id = tree.Id,
                     Name = tree.Name,
                     Description = tree.Description,
                     Creator = tree.Owner.Login
