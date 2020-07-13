@@ -106,7 +106,7 @@ namespace GenTreesCore.Controllers
                     .ThenInclude(p => p.Relations)
                 .Include(t => t.GenTreeDateTimeSetting)
                 .Include(t => t.CustomPersonDescriptionTemplates)
-                .Where(t => !t.IsPrivate && t.Id == id)
+                .Where(t => t.Id == id && (!t.IsPrivate || t.Owner.Id == authorizedUserId))
                 .Select(t => new GenTreeViewModel
                 {
                     GenTree = t,
