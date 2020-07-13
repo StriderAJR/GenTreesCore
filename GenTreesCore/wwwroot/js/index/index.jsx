@@ -1,6 +1,7 @@
 ﻿import Heading from './heading'
 import MenuBar from './menuBar'
 import MainArea from './mainArea'
+import Footer from './footer'
 
 class IndexPage extends React.Component {
     render() {
@@ -11,8 +12,8 @@ class IndexPage extends React.Component {
                 <MainArea
                     name={testData.name}
                     text={testData.text}
-                    imgUrl={testData.imgUrl}/>
-
+                    imgUrl={testData.imgUrl} />
+                <Footer />
             </div>
         );
     }
