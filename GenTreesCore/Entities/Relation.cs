@@ -31,10 +31,10 @@ namespace GenTreesCore.Entities
         /// <summary>
         /// Степень родства
         /// </summary>
-        public RealtionRate RealtionRate { get; set; }
+        public RelationRate RelationRate { get; set; }
     }
 
-    public enum RealtionRate
+    public enum RelationRate
     {
         /// <summary>
         /// Кровный родственник

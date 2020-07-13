@@ -45,6 +45,7 @@ namespace GenTreesCore.Services
                     LastVisit = DateTime.Now,
                     IsAdmin = false
                 });
+            _db.SaveChangesAsync();
         }
 
         public bool LoginIsRegistered(string login)
@@ -74,6 +75,7 @@ namespace GenTreesCore.Services
 
             user.LastVisit = DateTime.Now;
             _db.Users.Update(user);
+            _db.SaveChanges();
             return user;
         }
         private string GenerateSalt()

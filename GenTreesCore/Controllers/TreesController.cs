@@ -16,6 +16,24 @@ namespace GenTreesCore.Controllers
             db = context;
         }
 
+        public async System.Threading.Tasks.Task<IActionResult> AddTestDateTimeSetting()
+        {
+            var dateTimeSetting = Services.DbProvider.GetTestDateTimeSetting();
+            db.GenTreeDateTimeSettings.Add(dateTimeSetting);
+            await db.SaveChangesAsync();
+            return RedirectToAction("Index", "Home");
+        }
+
+        public async System.Threading.Tasks.Task<IActionResult> AddTestGenTree()
+        {
+            var tree = GenTreesCore.Services.DbProvider.GetSimpleTestGenTree();
+            tree.Owner = db.Users.FirstOrDefault(u => u.Login == "admin");
+            tree.GenTreeDateTimeSetting = db.GenTreeDateTimeSettings.FirstOrDefault(t => true);
+            db.GenTrees.Add(tree);
+            await db.SaveChangesAsync();
+            return RedirectToAction("Public", "Trees");
+        }
+
         [HttpGet("trees/public")]
         public JsonResult GetPublicTreesList()
         {

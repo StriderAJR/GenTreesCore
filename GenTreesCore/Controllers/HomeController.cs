@@ -24,9 +24,16 @@ namespace GenTreesCore.Controllers
             return View();
         }
 
+
+
         public JsonResult GetTestGenTree()
         {
             return new JsonResult(DbProvider.GetTestGenTree());
+        }
+
+        public JsonResult GetSimpleTestGenTree()
+        {
+            return new JsonResult(DbProvider.GetSimpleTestGenTree());
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

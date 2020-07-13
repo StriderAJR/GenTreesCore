@@ -8,6 +8,53 @@ namespace GenTreesCore.Services
 {
     public class DbProvider
     {
+        public static GenTree GetSimpleTestGenTree()
+        {
+            var eyesColorTemplate = new CustomPersonDescriptionTemplate { Name = "Eyes color" };
+            GenTree simpleTree = new GenTree
+            {
+                Name = "FamilyTree",
+                Description = "A simple test tree",
+                CustomPersonDescriptionTemplates = new List<CustomPersonDescriptionTemplate>() { eyesColorTemplate }
+            };
+
+            var mother = new Person { FirstName = "Tmia", LastName = "Shevik" };
+            var father = new Person { FirstName = "Hovard", LastName = "Dored" };
+            var child = new Person
+            {
+                FirstName = "Millia",
+                LastName = "Shevido",
+                CustomDescriptions = new List<CustomPersonDescription>()
+            {
+                new CustomPersonDescription{ Template = eyesColorTemplate, Value = "brown"}
+            }
+            };
+            mother.Relations = new List<Relation>() { new SpouseRelation { TargetPerson = father } };
+            father.Relations = new List<Relation>()
+            {
+                new ChildRelation {TargetPerson = child, SecondParent = mother, RelationRate = RelationRate.BloodRelative}
+            };
+
+            simpleTree.Persons = new List<Person>() { mother, father, child };
+
+            return simpleTree;
+
+        }
+
+        public static GenTreeDateTimeSetting GetTestDateTimeSetting()
+        {
+            return new GenTreeDateTimeSetting
+            {
+                Name = "Parallel World Calendar",
+                Eras = new List<GenTreeEra>()
+                {
+                    new GenTreeEra { Name = "Cold Era", ShortName = "cd.", ThroughBeginYear = 1, YearCount = 2000 },
+                    new GenTreeEra { Name = "Ocean Era", ShortName = "oc.", ThroughBeginYear = 1001, YearCount = 1200 },
+                    new GenTreeEra { Name = "Forest Era", ShortName = "fr.", ThroughBeginYear = 3201, YearCount = 4000 }
+                },
+                YearMonthCount = 9
+            };
+        }
         public static GenTree GetTestGenTree()
         {
             GenTree lotrGenTree = new GenTree();
@@ -130,7 +177,11 @@ namespace GenTreesCore.Services
                     }
                 }
             };
-            
+
+            result = new List<Person>()
+            {
+                turin, lalaith,nienor,morwen,hurin,baragund,belegund,bregolas,beren,emeldir,barahir,bregor
+            };
 
             lotrGenTree.Persons = result;
             return lotrGenTree;
