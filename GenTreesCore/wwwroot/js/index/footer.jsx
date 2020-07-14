@@ -1,13 +1,13 @@
 ﻿class Footer extends React.Component {
     render() {
         return (
-            <footer class="page-footer font-small primary-color">
+            <footer className="page-footer font-small primary-color">
                 <hr />
-                <div class="container-fluid text-center text-md-left">
-                    <div class="row">
-                        <div class="col-xs-6 col-sm-3">
-                            <h5 class="text-uppercase">Creators</h5>
-                            <ul class="list-unstyled">
+                <div className="container-fluid text-center text-md-left">
+                    <div className="row">
+                        <div className="col-xs-6 col-sm-3">
+                            <h5 className="text-uppercase">Creators</h5>
+                            <ul className="list-unstyled">
                                 <li>
                                     <a href="#!">CharlyFox</a>
                                 </li>
@@ -19,7 +19,7 @@
                     </div>
                 </div>
                 <hr />
-                <div class="footer-copyright text-center py-3">
+                <div className="footer-copyright text-center py-3">
                     © 2020 Copyright:
             <a href="#!">Gen tree</a>
                 </div>
