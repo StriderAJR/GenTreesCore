@@ -1,9 +1,9 @@
 ﻿class GenTree extends React.Component {
     render() {
         return (
-            <div>Here will be my GenTree</div>
+            <div>HMMMMM</div>
         );
     }
 }
 
-export default GenTree
+export default GenTree;

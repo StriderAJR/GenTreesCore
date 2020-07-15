@@ -10,9 +10,13 @@ using GenTreesCore.Entities;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
+using System.Net.Http;
+using System.Net;
 
 namespace GenTreesCore.Controllers
 {
+    [ApiController]
+    [Route("/[controller]/[action]")]
     public class UsersController : Controller
     {
         private IUserService userService;
@@ -31,24 +35,18 @@ namespace GenTreesCore.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(LoginViewModel model)
+        public IActionResult Login(LoginViewModel model)
         {
-            if (ModelState.IsValid)
+            User user = userService.LogIn(model.Login, model.Password);
+            if (user != null)
             {
-                User user = userService.LogIn(model.Login, model.Password);
-                if (user != null)
-                {
-                    await db.SaveChangesAsync();
-                    await Authenticate(model.Login); // аутентификация
-                    return RedirectToAction("Index", "Home"); //возвращение на домашнюю страницу
-                }
-                else
-                {
-                    ModelState.AddModelError("Login", "Некорректные логин и(или) пароль");
-                }
+                Authenticate(model.Login);   
+                return RedirectToAction("Index", "Home");
             }
-            return View(model);
+            else
+            {
+                return new BadRequestObjectResult("login failed");
+            }
         }
 
         [HttpGet]
@@ -58,59 +56,19 @@ namespace GenTreesCore.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Register(RegisterViewModel model)
+        public IActionResult Register(RegisterViewModel model)
         {
-            if (ModelState.IsValid)
+            if (userService.LoginIsRegistered(model.Login))
+                return new BadRequestObjectResult("user alredy exists");
+            else if (userService.EmailIsRegistered(model.Email))
+                return new BadRequestObjectResult("email already exists");
+            else
             {
-                if (userService.LoginIsRegistered(model.Login))
-                {
-                    ModelState.AddModelError("Login", "Пользователь с таким логином уже существует");
-                }
-                else if (userService.EmailIsRegistered(model.Email))
-                {
-                    ModelState.AddModelError("Email", "Email уже зарегистрирован");
-                }
-                else
-                {
-                    // добавляем пользователя в бд
-                    userService.Register(model.Login, model.Email, model.Password);
-
-                    await db.SaveChangesAsync();
-                    await Authenticate(model.Login); // аутентификация
-
-                    return RedirectToAction("Index", "Home"); //возвращение на домашню страницу
-                }
+                userService.Register(model.Login, model.Email, model.Password);
+                Authenticate(model.Login);
+                return RedirectToAction("Index", "Home");
             }
-            return View(model);
-        }
-
-        [HttpGet]
-        public IActionResult ForgotPassword()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                if (!userService.EmailIsConfirmed(model.Login))
-                {
-                    ModelState.AddModelError("Login", "Пользователя не существует или Email пользователя не был подтвержден");
-                }
-                else
-                {
-                    //TODO: новый пароль на email
-                    ModelState.AddModelError("Login", "Данная функция недоступна, свяжитесь с администратором сайта");
-                }
-            }
-            return View(model);
-        }
-
-      
+        }   
 
         private async Task Authenticate(string login)
         {
@@ -127,6 +85,7 @@ namespace GenTreesCore.Controllers
         }
 
         [Authorize]
+        [HttpGet]
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
