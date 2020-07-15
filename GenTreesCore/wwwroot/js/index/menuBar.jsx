@@ -14,6 +14,7 @@
         window.location.assign('https://localhost:5001/Home/PublicTrees');
     }
 
+
     render() {
         if (!this.state.isAuthorized) {
             return (
@@ -31,7 +32,7 @@
                         </li>
                         <li className="nav-item" role="presentation">
                             <a className="flex-sm-fill text-sm-center nav-link" id="pills-signIn-tab" data-toggle="pill"
-                               href="#pills-signIn" role="tab" aria-controls="pills-signIn" aria-selected="false">Sign in</a>
+                                href="/Users/Login" onClick={(e) => this.handleClick(e)} role="tab" aria-controls="pills-signIn" aria-selected="false">Sign in</a>
                         </li>
                     </ul>
                     <div className="tab-content" id="pills-tabContent">
@@ -69,6 +70,12 @@
             );
         }
     }
+
+    handleClick(){
+        console.log('clicked');
+        window.location.assign('https://localhost:5001/Users/Login');
+    }
 }
 
+    
 export default MenuBar;

@@ -33,41 +33,6 @@ const testData = {
     imgUrl: 'https://i.pinimg.com/736x/ec/87/21/ec8721be95197e25509de03e13896fbe.jpg',
 };
 
-//+ 'Ut ultricies dolor id nunc feugiat viverra.Quisque a diam vitae sapien imperdiet iaculis.' +
-//'Duis ultrices, orci non sagittis maximus, tellus dolor faucibus risus, sed egestas lacus nibh ut arcu.' +
-//'In eget bibendum lorem.Nulla iaculis eros sed ex varius cursus.Fusce sit amet justo ac erat lacinia tincidunt.' +
-//'Donec ornare id risus vitae egestas.'
-
-//function Footer() {
-//    return (
-//        <footer class="page-footer font-small primary-color">
-//            <hr />
-//            <div class="container-fluid text-center text-md-left">
-//                <div class="row">
-//                    <div class="col-xs-6 col-sm-3">
-//                        <h5 class="text-uppercase">Creators</h5>
-//                        <ul class="list-unstyled">
-//                            <li>
-//                                <a href="#!">CharlyFox</a>
-//                            </li>
-//                            <li>
-//                                <a href="#!">inn</a>
-//                            </li>
-//                        </ul>
-//                    </div>
-
-//                </div>
-//            </div>
-//            <hr />
-//            <div class="footer-copyright text-center py-3">© 2020 Copyright:
-//                <a href="#!">Gen tree</a>
-//            </div>
-//        </footer>
-//    )
-//}
-//&copy;{new Date().getFullYear()} GEN TREES| All right reserved | Privacy
-
-
 ReactDOM.render(
     React.createElement(IndexPage, null),
     document.getElementById('content')
