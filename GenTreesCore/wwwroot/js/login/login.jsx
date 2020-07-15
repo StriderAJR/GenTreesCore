@@ -6,6 +6,9 @@
 //    )
 //}
 
+//import Footer from './footer'
+//import IndexPage from '../index'
+
 class LogInPage extends React.Component {
     constructor(props) {
         super(props);
@@ -23,29 +26,38 @@ class LogInPage extends React.Component {
 
     onLoginInput(e) {
         this.setState({ Login: e.target.value });
+        console.log('smth');
     }
 
     onPasswordInput(e) {
         this.setState({ Password: e.target.value });
+        console.log('smth');
     }
 
     //changeHandler(e){
     //    this.setState({ [e.name]: e.value});
     //}
 
-    onSubmit(){
-        var data = new FormData;
-        data.append("Login", this.Login);
-        data.append("Password", this.Password);
-
+    onSubmit(e) {
+        e.preventDefault();
+        var json = JSON.stringify({
+            Login: this.state.Login,
+            Password: this.state.Password
+        });
         var xhr = new XMLHttpRequest();
-        xhr.open('post', 'https://localhost:5001/Users/Login', true);
+        xhr.open('post', '/Users/Login', true);
+        xhr.setRequestHeader("Content-Type", "application/json");
         xhr.onload = function () {
             if (xhr.status == 200) {
                 console.log('aliluya');
+                window.location.href = "../home/index";
+                }
+            else {
+                console.log(xhr.responseText); //сообщение об ошибки с сервера
             }
         }.bind(this);
-        xhr.send(data);
+        xhr.send(json);
+        console.log("sending data...");
     }
 
     render() {
@@ -55,7 +67,7 @@ class LogInPage extends React.Component {
                     <div className="col-md-3"></div>
                     <div className="col-md-6">
                         <div className="card">
-                            <form onSubmit={ this.onSubmit} className="text-center border border-white p-5" action="#!" >
+                            <form onSubmit={(e) => this.onSubmit(e)} className="text-center border border-white p-5" action="#!" >
 
                                 <p className="h4 mb-4">Sign in</p>
 
