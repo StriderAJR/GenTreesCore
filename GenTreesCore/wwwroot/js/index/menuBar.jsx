@@ -4,7 +4,14 @@
 
         this.state = {
             isAuthorized: false
-        }
+        };
+
+        //this.handleClick = handleClick.bind(this);
+    }
+
+    publickTreesHandleClick() {
+        console.log('clicked');
+        window.location.assign('https://localhost:5001/Home/PublicTrees');
     }
 
 
@@ -20,8 +27,8 @@
                         </li>
                         <li className="nav-item" role="presentation">
                             <a className="flex-sm-fill text-sm-center nav-link" id="pills-publicTrees-tab"
-                               data-toggle="pill" href="#pills-publicTrees" role="tab" aria-controls="pills-publicTrees"
-                               aria-selected="false">Public trees</a>
+                                data-toggle="pill" href="/Home/PublicTrees" onClick={(e) => this.publickTreesHandleClick(e)} role="tab" aria-controls="pills-publicTrees"
+                                aria-selected="false">Public trees</a>
                         </li>
                         <li className="nav-item" role="presentation">
                             <a className="flex-sm-fill text-sm-center nav-link" id="pills-signIn-tab" data-toggle="pill"
