@@ -4,6 +4,11 @@ using Microsoft.AspNetCore.Mvc;
 using GenTreesCore.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.ClearScript;
+using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using System.Text.Json;
+using JsonSubTypes;
 
 namespace GenTreesCore.Controllers
 {
@@ -56,10 +61,10 @@ namespace GenTreesCore.Controllers
         public JsonResult GetMyTreesList()
         {
             //получаем id авторизованного пользователя
-            var id = int.Parse(HttpContext.User.Identity.Name);
+            var authorizedUserId = int.Parse(HttpContext.User.Identity.Name);
             //получаем список всех его деревьев
             var trees = db.GenTrees
-                .Where(tree => tree.Owner.Id == id)
+                .Where(tree => tree.Owner.Id == authorizedUserId)
                 .Select(tree => new GenTreeListItemViewModel
                 {
                     Id = tree.Id,
@@ -87,6 +92,50 @@ namespace GenTreesCore.Controllers
                 .ToList();
 
             return Json(trees);
+        }
+
+        [HttpGet("trees/gentree")]
+        public IActionResult GetGenTree(int id)
+        {
+            int? authorizedUserId = null;
+            if (HttpContext.User.Identity.IsAuthenticated)
+                authorizedUserId = int.Parse(HttpContext.User.Identity.Name);
+
+            var tree = db.GenTrees
+                .Include(t => t.Persons)
+                    .ThenInclude(p => p.CustomDescriptions)
+                        .ThenInclude(p => p.Template)
+                .Include(t => t.Persons)
+                    .ThenInclude(p => p.Relations)
+                .Include(t => t.GenTreeDateTimeSetting)
+                .Include(t => t.CustomPersonDescriptionTemplates)
+                .Where(t => t.Id == id && (!t.IsPrivate || t.Owner.Id == authorizedUserId))
+                .Select(t => new GenTreeViewModel
+                {
+                    GenTree = t,
+                    CanEdit = authorizedUserId != null && t.Owner.Id == authorizedUserId
+                })
+                .FirstOrDefault();
+
+            if (tree == null)
+                return Content($"no tree with id {id} found");
+
+            return Ok(ToJson(tree));
+        }
+
+        private string ToJson(GenTreeViewModel tree)
+        {
+            var settings = new JsonSerializerSettings();
+            settings.Converters.Add(JsonSubtypesConverterBuilder
+                .Of(typeof(Relation), "Type")
+                .RegisterSubtype(typeof(ChildRelation), "ChildRelation")
+                .RegisterSubtype(typeof(SpouseRelation), "SpouseRelation")
+                .SerializeDiscriminatorProperty()
+                .Build());
+
+            settings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+
+            return JsonConvert.SerializeObject(tree, settings);
         }
     }
 }
