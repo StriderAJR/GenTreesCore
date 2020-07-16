@@ -11,8 +11,14 @@
 
     publickTreesHandleClick() {
         console.log('clicked');
-        window.location.assign('https://localhost:5001/Home/PublicTrees');
+        window.location.assign('/Home/PublicTrees');
     }
+
+    loginHandleClick(){
+        console.log('clicked');
+        window.location.assign('/Users/Login');
+    }
+
 
 
     render() {
@@ -32,7 +38,7 @@
                         </li>
                         <li className="nav-item" role="presentation">
                             <a className="flex-sm-fill text-sm-center nav-link" id="pills-signIn-tab" data-toggle="pill"
-                                href="/Users/Login" onClick={(e) => this.handleClick(e)} role="tab" aria-controls="pills-signIn" aria-selected="false">Sign in</a>
+                                href="/Users/Login" onClick={(e) => this.loginHandleClick(e)} role="tab" aria-controls="pills-signIn" aria-selected="false">Sign in</a>
                         </li>
                     </ul>
                     <div className="tab-content" id="pills-tabContent">
@@ -70,12 +76,6 @@
             );
         }
     }
-
-    handleClick(){
-        console.log('clicked');
-        window.location.assign('https://localhost:5001/Users/Login');
-    }
 }
 
-    
 export default MenuBar;

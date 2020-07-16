@@ -5,11 +5,11 @@ import TreeCard from './treeCard'
 
 class PublicTreesPage extends React.Component {
     constructor(props) {
-        super(props)
+        super(props);
         this.state = {
             data: [],
             isLoading: false,
-        }
+        };
     }
 
     componentDidMount() {
