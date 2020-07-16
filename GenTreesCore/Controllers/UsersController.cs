@@ -70,6 +70,12 @@ namespace GenTreesCore.Controllers
             }
         }   
 
+        [HttpGet]
+        public bool IsLoggedIn()
+        {
+            return HttpContext.User.Identity.IsAuthenticated;
+        }
+
         private async Task Authenticate(string login)
         {
             var userId = db.Users.FirstOrDefault(u => u.Login == login).Id;
