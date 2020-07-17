@@ -1,14 +1,13 @@
-﻿import ModalWindow from './modalWindow'
+﻿import ModalWindow from '../myTrees/modalWindow'
 
-class TreeCard extends React.Component {
+class Person extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            data: props.tree,
-            image: props.image,
+            data: props.pers,
             show: false
-        };
+        }
 
         this.handleShow = this.handleShow.bind(this);
     }
@@ -27,24 +26,20 @@ class TreeCard extends React.Component {
                         <span className="sr-only">Delete</span>
                     </button>
                     <ModalWindow onClose={(e) => this.handleShow()} show={this.state.show}>
-                        Are you sure you want to delete the tree?
+                        Are you sure you want to delete the person?
                     </ModalWindow>
                 </div>
-                <img className="card-img-top" src={this.state.image.imgUrl} alt={this.state.image.name}>  
-                </img>
                 <div className="card-body">
-                    <h4 className="card-title">{this.state.data.name}</h4>
-                    <p className="card-text">Date of creation: </p>
+                    <p className="card-text">{this.state.data.name}</p>
+                    <p className="card-text">Gender: {this.state.data.gender}</p>
+                    <p className="card-text">Date of birth: {this.state.data.dateBirth}</p>
                 </div>
                 <div class="card-footer">
                     <small className="text-muted">Last updated ~~~</small>
                 </div>
-            </div> 
+            </div>     
         );
     }
 }
 
-//{this.state.data.dateCreate}
-//{this.state.data.dateLastChange}
-
-export default TreeCard;
+export default Person
