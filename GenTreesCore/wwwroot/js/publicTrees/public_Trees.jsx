@@ -49,22 +49,7 @@ class PublicTreesPage extends React.Component {
                 <div className="card-deck">
                     {data.map(tree => {
                         return (
-                            <TreeCard tree={tree} image={testData} />   
-                            /*
-                            <div className="col mb-4" key={tree.id}>
-                                <div className="card">
-                                    <img className="card-img-top" src={testData.imgUrl} alt={testData.name} />
-                                    <div className="card-body">
-                                        <h4 className="card-title">{tree.name}</h4>
-                                        <p className="card-text">Description: {tree.description ? tree.description : "¯\_(ツ)_/¯"}</p>
-                                        <p className="card-text">Created by {tree.creator}</p>
-                                    </div>
-                                    <div class="card-footer">
-                                        <small className="text-muted">Last updated ~~~</small>
-                                    </div>
-                                </div>
-                            </div>
-                            */
+                            <TreeCard tree={tree} image={testData} />
                         );
                     })}
                 </div>
@@ -84,6 +69,8 @@ class PublicTreesPage extends React.Component {
     }
 }
 
+
+
 const testData = {
     name: 'you want to make me crazy again, right?',
     imgUrl: 'https://sun9-12.userapi.com/c855020/v855020970/d1c61/l-bqL1nE21k.jpg',
@@ -95,3 +82,18 @@ ReactDOM.render(
     React.createElement(PublicTreesPage, null),
     document.getElementById('publicContent')
 );
+/*
+<div className="col mb-4" key={tree.id}>
+    <div className="card">
+        <img className="card-img-top" src={testData.imgUrl} alt={testData.name} />
+        <div className="card-body">
+            <h4 className="card-title">{tree.name}</h4>
+            <p className="card-text">Description: {tree.description ? tree.description : "¯\_(ツ)_/¯"}</p>
+            <p className="card-text">Created by {tree.creator}</p>
+        </div>
+        <div class="card-footer">
+            <small className="text-muted">Last updated ~~~</small>
+        </div>
+    </div>
+</div>
+*/

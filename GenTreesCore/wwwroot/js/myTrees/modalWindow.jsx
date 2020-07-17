@@ -15,13 +15,13 @@
         }
         return (
             <div className="card text-right">
-                <div className="card">
+                
                     <div className="card-body">
                         <h5 className="card-text">{this.props.children}</h5>
                         <a href="#" className="card-link" onClick={(e) => this.onClose(e)}>Yes</a>
                         <a href="#" className="card-link" onClick={(e) => this.onClose(e)}>Cancel</a>
                     </div>
-                </div>    
+                   
             </div>
         );
     }
