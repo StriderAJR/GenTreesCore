@@ -17,12 +17,12 @@ namespace GenTreesCore.Entities
 
         public string ToDateTimeString()
         {
-            return $"{Era.Name}, {Year}/{Month}/{Day} {Hour}:{Minute}:{Second}";
+            return $"{Era.Name}, {Day}/{Month}/{Year} {Hour}:{Minute}:{Second}";
         }
 
         public string ToShortDateTimeString()
         {
-            return $"{Year}/{Month}/{Day}, {Era.ShortName}";
+            return $"{Day}/{Month}/{Year}, {Era.ShortName}";
         }
     }
 
