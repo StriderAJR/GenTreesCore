@@ -35,10 +35,24 @@ namespace GenTreesCore.Controllers
         {
             var tree = GenTreesCore.Services.DbProvider.GetSimpleTestGenTree();
             tree.Owner = db.Users.FirstOrDefault(u => u.Login == "admin");
-            var dateTimeSetting = db.GenTreeDateTimeSettings.FirstOrDefault(
-                t => t.Name != "g");
+            var dateTimeSetting = db.GenTreeDateTimeSettings.FirstOrDefault();
             tree.GenTreeDateTimeSetting = dateTimeSetting;
             db.GenTrees.Add(tree);
+            await db.SaveChangesAsync();
+            return RedirectToAction("Public", "Trees");
+        }
+
+        public async System.Threading.Tasks.Task<IActionResult> AddTestDate()
+        {
+            var person = db.GenTrees.Include(t => t.Persons).FirstOrDefault().Persons.FirstOrDefault();
+            var era = db.GenTreeDateTimeSettings.Include(d => d.Eras).FirstOrDefault().Eras.FirstOrDefault();
+            person.BirthDate = new GenTreeDateTime
+            {
+                Era = era,
+                Year = 1874,
+                Month = 2,
+                Day = 20
+            };
             await db.SaveChangesAsync();
             return RedirectToAction("Public", "Trees");
         }
@@ -48,7 +62,7 @@ namespace GenTreesCore.Controllers
         {
             var trees = db.GenTrees
                 .Where(tree => !tree.IsPrivate)
-                .Select(tree => new GenTreeListItemViewModel
+                .Select(tree => new GenTreeSimpleViewModel
                 {
                     Id = tree.Id,
                     Name = tree.Name,
@@ -69,7 +83,7 @@ namespace GenTreesCore.Controllers
             //получаем список всех его деревьев
             var trees = db.GenTrees
                 .Where(tree => tree.Owner.Id == authorizedUserId)
-                .Select(tree => new GenTreeListItemViewModel
+                .Select(tree => new GenTreeSimpleViewModel
                 {
                     Id = tree.Id,
                     Name = tree.Name,
@@ -86,7 +100,7 @@ namespace GenTreesCore.Controllers
         {
             var trees = db.GenTrees
                 .Where(tree => !tree.IsPrivate && tree.Owner.Login == login)
-                .Select(tree => new GenTreeListItemViewModel
+                .Select(tree => new GenTreeSimpleViewModel
                 {
                     Id = tree.Id,
                     Name = tree.Name,

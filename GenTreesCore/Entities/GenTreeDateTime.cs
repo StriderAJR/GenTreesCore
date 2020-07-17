@@ -8,12 +8,12 @@ namespace GenTreesCore.Entities
         public bool IsNull { get; }
         public int Id { get; set; }
         public GenTreeEra Era { get; set; }
-        public uint Year { get; set; }
-        public uint Month { get; set; }
-        public uint Day { get; set; }
-        public uint Hour { get; set; }
-        public uint Minute { get; set; }
-        public uint Second { get; set; }
+        public int Year { get; set; }
+        public int Month { get; set; }
+        public int Day { get; set; }
+        public int Hour { get; set; }
+        public int Minute { get; set; }
+        public int Second { get; set; }
 
         public string ToDateTimeString()
         {
@@ -66,10 +66,10 @@ namespace GenTreesCore.Entities
         /// <summary>
         /// Год начала эпохи в сквозном летоисчислении (если бы не было разделения на эпохи)
         /// </summary>
-        public uint ThroughBeginYear { get; set; }
+        public int ThroughBeginYear { get; set; }
         /// <summary>
         /// Длительность эпохи в годах
         /// </summary>
-        public uint? YearCount { get; set; }
+        public int? YearCount { get; set; }
     }
 }
