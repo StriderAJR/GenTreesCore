@@ -23,17 +23,21 @@ namespace GenTreesCore.Controllers
 
         public async System.Threading.Tasks.Task<IActionResult> AddTestDateTimeSetting()
         {
+            
             var dateTimeSetting = Services.DbProvider.GetTestDateTimeSetting();
+            dateTimeSetting.Owner = db.Users.FirstOrDefault(u => u.Login == "admin");
             db.GenTreeDateTimeSettings.Add(dateTimeSetting);
             await db.SaveChangesAsync();
-            return RedirectToAction("Index", "Home");
+            return Ok();
         }
 
         public async System.Threading.Tasks.Task<IActionResult> AddTestGenTree()
         {
             var tree = GenTreesCore.Services.DbProvider.GetSimpleTestGenTree();
             tree.Owner = db.Users.FirstOrDefault(u => u.Login == "admin");
-            tree.GenTreeDateTimeSetting = db.GenTreeDateTimeSettings.FirstOrDefault(t => true);
+            var dateTimeSetting = db.GenTreeDateTimeSettings.FirstOrDefault(
+                t => t.Name != "g");
+            tree.GenTreeDateTimeSetting = dateTimeSetting;
             db.GenTrees.Add(tree);
             await db.SaveChangesAsync();
             return RedirectToAction("Public", "Trees");

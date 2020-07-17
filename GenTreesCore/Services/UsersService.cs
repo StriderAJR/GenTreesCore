@@ -43,7 +43,7 @@ namespace GenTreesCore.Services
                     EmailConfirmed = false,
                     DateCreated = DateTime.Now,
                     LastVisit = DateTime.Now,
-                    IsAdmin = false
+                    Role = Role.User 
                 });
             _db.SaveChangesAsync();
         }

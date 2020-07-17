@@ -1,13 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.EntityFrameworkCore.Migrations;
-using Microsoft.EntityFrameworkCore.Migrations.Operations;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace GenTreesCore.Entities
 {
@@ -25,6 +21,67 @@ namespace GenTreesCore.Entities
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            OnUserCreating(modelBuilder);
+            OnGenTreeCreating(modelBuilder);
+            OnDateTimeSettingCreating(modelBuilder);
+            OnGenTreeDateTimeCreating(modelBuilder);
+            OnEraCreating(modelBuilder);
+            OnPersonCreating(modelBuilder);
+            OnRelationCreating(modelBuilder);
+            OnDescriptionTemplateCreating(modelBuilder);
+            OnCustomDescriptionCreating(modelBuilder);       
+
+            base.OnModelCreating(modelBuilder);
+        }
+
+        private void OnUserCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<User>()
+                .ToTable("Users");
+
+            modelBuilder.Entity<User>()
+                .Property(e => e.Role)
+                .HasConversion(v => v.ToString(), v => (Role)Enum.Parse(typeof(Role), v))
+                .HasColumnName("Role");
+        }
+
+        private void OnGenTreeCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<GenTree>()
+                .ToTable("GenTrees");
+        }
+
+        private void OnDateTimeSettingCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<GenTreeDateTimeSetting>()
+                .ToTable("GenTreeDateTimeSettings");
+        }
+
+        private void OnEraCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<GenTreeEra>()
+                .ToTable("GenTreeEras");
+        }
+
+        private void OnGenTreeDateTimeCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<GenTreeDateTime>()
+                .ToTable("GenTreeDates");
+        }
+
+        private void OnPersonCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Person>()
+                .ToTable("Persons");
+
+            modelBuilder.Entity<Person>()
+                .HasMany(e => e.Relations)
+                .WithOne()
+                .HasForeignKey("SourcePersonId");
+        }
+
+        private void OnRelationCreating(ModelBuilder modelBuilder)
+        {
             modelBuilder.Entity<Relation>()
                 .ToTable("Relations");
 
@@ -37,47 +94,27 @@ namespace GenTreesCore.Entities
                 .Property(e => e.RelationRate)
                 .HasConversion(v => v.ToString(), v => (RelationRate)Enum.Parse(typeof(RelationRate), v))
                 .HasColumnName("RelationRate");
+        }
 
+        private void OnDescriptionTemplateCreating(ModelBuilder modelBuilder)
+        {
             modelBuilder.Entity<CustomPersonDescriptionTemplate>()
                 .ToTable("CustomPersonDescriptionTemplates");
 
+            modelBuilder.Entity<CustomPersonDescriptionTemplate>()
+                .Property(e => e.Type)
+                .HasConversion(v => v.ToString(), v => (TemplateType)Enum.Parse(typeof(TemplateType), v))
+                .HasColumnName("Type");
+        }
+
+        private void OnCustomDescriptionCreating(ModelBuilder modelBuilder)
+        {
             modelBuilder.Entity<CustomPersonDescription>()
                 .ToTable("CustomPersonDescriptions");
-
-            modelBuilder.Entity<Person>()
-                .ToTable("Persons");
-
-            modelBuilder.Entity<Person>()
-                .HasMany(e => e.Relations)
-                .WithOne()
-                .HasForeignKey("SourcePersonId");
-
-            modelBuilder.Entity<Person>()
-                .Property(e => e.BirthDate)
-                .HasColumnName("BirthDate_json");
-
-            modelBuilder.Entity<Person>()
-                .Property(e => e.DeathDate)
-                .HasColumnName("DeathDate_json");
-
-            modelBuilder.Entity<GenTreeDateTimeSetting>()
-                .Property(e => e.Eras)
-                .HasConversion(v => JsonConvert.SerializeObject(v), v => JsonConvert.DeserializeObject<List<GenTreeEra>>(v))
-                .HasColumnName("Eras_json");
 
             modelBuilder.Entity<CustomPersonDescription>()
                 .Property(e => e.Value)
                 .HasConversion(v => JsonConvert.SerializeObject(v), v => JsonConvert.DeserializeObject(v));
-
-            modelBuilder.Entity<Person>()
-                .Property(e => e.BirthDate)
-                .HasConversion(v => JsonConvert.SerializeObject(v), v => JsonConvert.DeserializeObject<GenTreeDateTime>(v));
-
-            modelBuilder.Entity<Person>()
-                .Property(e => e.DeathDate)
-                .HasConversion(v => JsonConvert.SerializeObject(v), v => JsonConvert.DeserializeObject<GenTreeDateTime>(v));
-
-            base.OnModelCreating(modelBuilder);
         }
     }
 }

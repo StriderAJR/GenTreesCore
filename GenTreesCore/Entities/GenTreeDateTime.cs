@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data.SqlTypes;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace GenTreesCore.Entities
 {
     public class GenTreeDateTime : INullable
     {
         public bool IsNull { get; }
+        public int Id { get; set; }
         public GenTreeEra Era { get; set; }
         public uint Year { get; set; }
         public uint Month { get; set; }
@@ -19,12 +17,12 @@ namespace GenTreesCore.Entities
 
         public string ToDateTimeString()
         {
-            throw new NotImplementedException();
+            return $"{Era.Name}, {Year}/{Month}/{Day} {Hour}:{Minute}:{Second}";
         }
 
         public string ToShortDateTimeString()
         {
-            throw new NotImplementedException();
+            return $"{Year}/{Month}/{Day}, {Era.ShortName}";
         }
     }
 
@@ -35,12 +33,14 @@ namespace GenTreesCore.Entities
     {
         public int Id { get; set; }
         public string Name { get; set; }
+        public User Owner { get; set; }
+        public bool IsPrivate { get; set; }
         public List<GenTreeEra> Eras { get; set; }
         /// <summary>
         /// Кол-во месяцев в году
         /// TODO настройка каждого месяца, чтобы можно было поменять его название и кол-во дней в месяце
         /// </summary>
-        public uint YearMonthCount { get; set; }
+        public int YearMonthCount { get; set; }
     }
 
     /// <summary>
@@ -48,6 +48,7 @@ namespace GenTreesCore.Entities
     /// </summary>
     public class GenTreeEra
     {
+        public int Id { get; set; }
         /// <summary>
         /// Название эпохи
         /// Например, "Первая Эпоха" или "Эпоха Древ"
