@@ -10,29 +10,57 @@ namespace GenTreesCore.Services
     {
         public static GenTree GetSimpleTestGenTree()
         {
-            var eyesColorTemplate = new CustomPersonDescriptionTemplate { Name = "Eyes color" };
+            var eyesColorTemplate = new CustomPersonDescriptionTemplate { Name = "Eyes color", Type = TemplateType.String};
             GenTree simpleTree = new GenTree
             {
                 Name = "FamilyTree",
                 Description = "A simple test tree",
-                CustomPersonDescriptionTemplates = new List<CustomPersonDescriptionTemplate>() { eyesColorTemplate }
+                CustomPersonDescriptionTemplates = new List<CustomPersonDescriptionTemplate>() { eyesColorTemplate },
+                DateCreated = DateTime.Now,
+                LastUpdated = DateTime.Now,
+                Image = "https://image.flaticon.com/icons/svg/1504/1504317.svg"
             };
 
-            var mother = new Person { FirstName = "Tmia", LastName = "Shevik" };
-            var father = new Person { FirstName = "Hovard", LastName = "Dored" };
+            //persons
+            var mother = new Person 
+            { 
+                FirstName = "Tmia",
+                LastName = "Shevik",
+                Gender = "Female",
+                BirthPlace = "Italy"
+            };
+            var father = new Person 
+            { 
+                FirstName = "Hovard", 
+                LastName = "Dored", 
+                Gender = "Male", 
+                Image = "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSqd8YsEuVMbRFd4DKrnTuNKD7qc5-Bv-R-3g&usqp=CAU" 
+            };
             var child = new Person
             {
                 FirstName = "Millia",
                 LastName = "Shevido",
+                Gender = "Femail",
                 CustomDescriptions = new List<CustomPersonDescription>()
-            {
-                new CustomPersonDescription{ Template = eyesColorTemplate, Value = "brown"}
-            }
+                {
+                    new CustomPersonDescription{ Template = eyesColorTemplate, Value = "brown"}
+                }
             };
-            mother.Relations = new List<Relation>() { new SpouseRelation { TargetPerson = father } };
+
+            //relations
+            mother.Relations = new List<Relation>() { 
+                new SpouseRelation { TargetPerson = father },
+                new ChildRelation {TargetPerson = child, SecondParent = father, RelationRate = RelationRate.NotBloodRelative}
+            };
             father.Relations = new List<Relation>()
             {
+                new SpouseRelation { TargetPerson = mother },
                 new ChildRelation {TargetPerson = child, SecondParent = mother, RelationRate = RelationRate.BloodRelative}
+            };
+            child.Relations = new List<Relation>()
+            {
+                new ChildRelation {TargetPerson = father, SecondParent = mother, RelationRate = RelationRate.BloodRelative},
+                new ChildRelation {TargetPerson = mother, SecondParent = father, RelationRate = RelationRate.NotBloodRelative}
             };
 
             simpleTree.Persons = new List<Person>() { mother, father, child };
@@ -48,11 +76,12 @@ namespace GenTreesCore.Services
                 Name = "Parallel World Calendar",
                 Eras = new List<GenTreeEra>()
                 {
-                    new GenTreeEra { Name = "Cold Era", ShortName = "cd.", ThroughBeginYear = 1, YearCount = 2000 },
-                    new GenTreeEra { Name = "Ocean Era", ShortName = "oc.", ThroughBeginYear = 1001, YearCount = 1200 },
-                    new GenTreeEra { Name = "Forest Era", ShortName = "fr.", ThroughBeginYear = 3201, YearCount = 4000 }
+                    new GenTreeEra {Name = "Cold Era", ShortName = "cd.", ThroughBeginYear = 1, YearCount = 2000 },
+                    new GenTreeEra {Name = "Ocean Era", ShortName = "oc.", ThroughBeginYear = 1001, YearCount = 1200 },
+                    new GenTreeEra {Name = "Forest Era", ShortName = "fr.", ThroughBeginYear = 3201, YearCount = 4000 }
                 },
-                YearMonthCount = 9
+                YearMonthCount = 9,
+                IsPrivate = false
             };
         }
         public static GenTree GetTestGenTree()
