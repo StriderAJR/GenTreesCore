@@ -9,18 +9,22 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System.Text.Json;
 using JsonSubTypes;
+using GenTreesCore.Services;
+using System.Collections.Generic;
+using System;
 
 namespace GenTreesCore.Controllers
 {
     public class TreesController : Controller
     {
-        private ApplicationContext db;
+        private TreesService treesService;
 
         public TreesController(ApplicationContext context)
         {
-            db = context;
+            treesService = new TreesService(context);
         }
 
+        /*
         public async System.Threading.Tasks.Task<IActionResult> AddTestDateTimeSetting()
         {
             
@@ -56,18 +60,20 @@ namespace GenTreesCore.Controllers
             await db.SaveChangesAsync();
             return RedirectToAction("Public", "Trees");
         }
+        */
 
         [HttpGet("trees/public")]
         public JsonResult GetPublicTreesList()
         {
-            var trees = db.GenTrees
-                .Where(tree => !tree.IsPrivate)
+            var trees = treesService.GetPublicTrees()
                 .Select(tree => new GenTreeSimpleViewModel
                 {
                     Id = tree.Id,
                     Name = tree.Name,
-                    Description = tree.Description,
-                    Creator = tree.Owner.Login
+                    Description = tree.Description.Substring(0,100),
+                    Creator = tree.Owner.Login,
+                    LastUpdated = tree.LastUpdated.ToString("d/mm/yyyy"),
+                    Image = tree.Image
                 })
                 .ToList();
 
@@ -81,31 +87,15 @@ namespace GenTreesCore.Controllers
             //получаем id авторизованного пользователя
             var authorizedUserId = int.Parse(HttpContext.User.Identity.Name);
             //получаем список всех его деревьев
-            var trees = db.GenTrees
-                .Where(tree => tree.Owner.Id == authorizedUserId)
-                .Select(tree => new GenTreeSimpleViewModel
+            var trees = treesService.GetUserGenTrees(authorizedUserId)
+                .Select(tree => new MyTreeSimpleViewModel
                 {
                     Id = tree.Id,
                     Name = tree.Name,
-                    Description = tree.Description,
-                    Creator = tree.Owner.Login
-                })
-                .ToList();
-
-            return Json(trees);
-        }
-
-        [HttpGet("trees/user")]
-        public JsonResult GetUserPublicTrees(string login)
-        {
-            var trees = db.GenTrees
-                .Where(tree => !tree.IsPrivate && tree.Owner.Login == login)
-                .Select(tree => new GenTreeSimpleViewModel
-                {
-                    Id = tree.Id,
-                    Name = tree.Name,
-                    Description = tree.Description,
-                    Creator = tree.Owner.Login
+                    Description = tree.Description.Substring(0, 100),
+                    DateCreated = tree.DateCreated.ToString("d/mm/yyyy"),
+                    LastUpdated = tree.LastUpdated.ToString("d/mm/yyyy"),
+                    Image = tree.Image
                 })
                 .ToList();
 
@@ -119,26 +109,87 @@ namespace GenTreesCore.Controllers
             if (HttpContext.User.Identity.IsAuthenticated)
                 authorizedUserId = int.Parse(HttpContext.User.Identity.Name);
 
-            var tree = db.GenTrees
-                .Include(t => t.Persons)
-                    .ThenInclude(p => p.CustomDescriptions)
-                        .ThenInclude(p => p.Template)
-                .Include(t => t.Persons)
-                    .ThenInclude(p => p.Relations)
-                .Include(t => t.GenTreeDateTimeSetting)
-                .Include(t => t.CustomPersonDescriptionTemplates)
-                .Where(t => t.Id == id && (!t.IsPrivate || t.Owner.Id == authorizedUserId))
-                .Select(t => new GenTreeViewModel
-                {
-                    GenTree = t,
-                    CanEdit = authorizedUserId != null && t.Owner.Id == authorizedUserId
-                })
-                .FirstOrDefault();
+            var tree = treesService.GetGenTree(id);
 
             if (tree == null)
-                return Content($"no tree with id {id} found");
+                return BadRequest($"no tree with id {id} found");
+            if (tree.IsPrivate && tree.Owner.Id != authorizedUserId)
+                return BadRequest("access denied");
 
-            return Ok(ToJson(tree));
+            var treeModel = new GenTreeViewModel
+            {
+                Id = tree.Id,
+                Name = tree.Name,
+                Description = tree.Description,
+                Creator = tree.Owner.Login,
+                CanEdit = tree.Owner.Id == authorizedUserId,
+                DateCreated = tree.DateCreated.ToString("d/mm/yyyy"),
+                LastUpdated = tree.LastUpdated.ToString("d/mm/yyyy"),
+                Image = tree.Image,
+                DescriptionTemplates = tree.CustomPersonDescriptionTemplates,
+                Persons = new List<PersonViewModel>()
+            };
+
+            if (tree.Persons != null)
+                foreach (var person in tree.Persons)
+                {
+                    var personModel = new PersonViewModel
+                    {
+                        Id = person.Id,
+                        LastName = person.LastName,
+                        FirstName = person.FirstName,
+                        MiddleName = person.MiddleName,
+                        Biography = person.Biography,
+                        Image = person.Image,
+                        CustomDescriptions = person.CustomDescriptions,
+                        Relations = new List<RelationViewModel>()
+                    };
+                    if (person.BirthDate != null)
+                    {
+                        personModel.BirthDate = person.BirthDate.ToDateTimeString();
+                        personModel.ShortBirthDate = person.BirthDate.ToShortDateTimeString();
+                    }
+                    if (person.DeathDate != null)
+                    {
+                        personModel.DeathDate = person.DeathDate.ToDateTimeString();
+                        personModel.ShortDeathDate = person.DeathDate.ToShortDateTimeString();
+                    }
+
+                    if (person.Relations != null)
+                        foreach (var relation in person.Relations)
+                        {
+                            if (relation is ChildRelation)
+                            {
+                                var childRelation = relation as ChildRelation;
+                                var childRelationModel = new ChildRelationViewModel
+                                {
+                                    Id = relation.Id,
+                                    TargetPersonId = relation.TargetPerson.Id,
+                                    SecondParentId = null,
+                                    RelationRate = childRelation.RelationRate.ToString(),
+                                    RelationType = "Child"
+                                };
+                                if (childRelation.SecondParent != null)
+                                    childRelationModel.SecondParentId = childRelation.SecondParent.Id;
+                                personModel.Relations.Add(childRelationModel);
+                            }
+                            else
+                            {
+                                personModel.Relations.Add(new SpouseRelationViewModel
+                                {
+                                    Id = relation.Id,
+                                    TargetPersonId = relation.TargetPerson.Id,
+                                    IsFinished = (relation as SpouseRelation).IsFinished,
+                                    RelationType = "Spouse"                                    
+                                });
+                            }
+                        }
+                    else
+                        person.Relations = null;
+                    treeModel.Persons.Add(personModel);
+                }
+
+            return Ok(ToJson(treeModel));
         }
 
         private string ToJson(GenTreeViewModel tree)
