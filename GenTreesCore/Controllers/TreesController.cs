@@ -67,7 +67,9 @@ namespace GenTreesCore.Controllers
                     Id = tree.Id,
                     Name = tree.Name,
                     Description = tree.Description,
-                    Creator = tree.Owner.Login
+                    Creator = tree.Owner.Login,
+                    LastUpdated = tree.LastUpdated.ToString("d/mm/yyyy"),
+                    Image = tree.Image
                 })
                 .ToList();
 
@@ -83,12 +85,14 @@ namespace GenTreesCore.Controllers
             //получаем список всех его деревьев
             var trees = db.GenTrees
                 .Where(tree => tree.Owner.Id == authorizedUserId)
-                .Select(tree => new GenTreeSimpleViewModel
+                .Select(tree => new MyTreeSimpleViewModel
                 {
                     Id = tree.Id,
                     Name = tree.Name,
                     Description = tree.Description,
-                    Creator = tree.Owner.Login
+                    DateCreated = tree.DateCreated.ToString("d/mm/yyyy"),
+                    LastUpdated = tree.LastUpdated.ToString("d/mm/yyyy"),
+                    Image = tree.Image
                 })
                 .ToList();
 
@@ -105,7 +109,9 @@ namespace GenTreesCore.Controllers
                     Id = tree.Id,
                     Name = tree.Name,
                     Description = tree.Description,
-                    Creator = tree.Owner.Login
+                    Creator = tree.Owner.Login,
+                    LastUpdated = tree.LastUpdated.ToString("d/mm/yyyy"),
+                    Image = tree.Image
                 })
                 .ToList();
 
