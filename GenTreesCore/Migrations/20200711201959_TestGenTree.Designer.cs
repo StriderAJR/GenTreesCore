@@ -4,14 +4,16 @@ using GenTreesCore.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace GenTreesCore.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20200711201959_TestGenTree")]
+    partial class TestGenTree
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -71,7 +73,7 @@ namespace GenTreesCore.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("GenTreeDateTimeSettingId")
+                    b.Property<int?>("DateTimeSettingsId")
                         .HasColumnType("int");
 
                     b.Property<string>("Description")
@@ -88,7 +90,7 @@ namespace GenTreesCore.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("GenTreeDateTimeSettingId");
+                    b.HasIndex("DateTimeSettingsId");
 
                     b.HasIndex("OwnerId");
 
@@ -108,8 +110,8 @@ namespace GenTreesCore.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<uint>("YearMonthCount")
-                        .HasColumnType("int");
+                    b.Property<long>("YearMonthCount")
+                        .HasColumnType("bigint");
 
                     b.HasKey("Id");
 
@@ -258,9 +260,9 @@ namespace GenTreesCore.Migrations
 
             modelBuilder.Entity("GenTreesCore.Entities.GenTree", b =>
                 {
-                    b.HasOne("GenTreesCore.Entities.GenTreeDateTimeSetting", "GenTreeDateTimeSetting")
+                    b.HasOne("GenTreesCore.Entities.GenTreeDateTimeSetting", "DateTimeSettings")
                         .WithMany()
-                        .HasForeignKey("GenTreeDateTimeSettingId");
+                        .HasForeignKey("DateTimeSettingsId");
 
                     b.HasOne("GenTreesCore.Entities.User", "Owner")
                         .WithMany()

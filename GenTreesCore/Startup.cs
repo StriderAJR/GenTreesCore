@@ -10,9 +10,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Components.Authorization;
 using JavaScriptEngineSwitcher.V8;
 using JavaScriptEngineSwitcher.Extensions.MsDependencyInjection;
 using React.AspNet;
+using GenTreesCore.Services;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace GenTreesCore
 {
@@ -39,6 +42,12 @@ namespace GenTreesCore
             services.AddDbContext<Entities.ApplicationContext>(options =>
                 options.UseSqlServer(connection));
 
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(options => //CookieAuthenticationOptions
+                {
+                    options.LoginPath = new Microsoft.AspNetCore.Http.PathString("/Users/Login");
+                });
+
             services.AddControllersWithViews();
         }
 
@@ -48,6 +57,8 @@ namespace GenTreesCore
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                //the next line is the only new one. The rest of the method may look different depending on your setup
+                // app.UseWebpackDevMiddleware(new Microsoft.AspNetCore.SpaServices.Webpack.WebpackDevMiddlewareOptions { HotModuleReplacement = true });
             }
             else
             {
@@ -80,6 +91,8 @@ namespace GenTreesCore
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 

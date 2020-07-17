@@ -24,15 +24,41 @@ namespace GenTreesCore.Controllers
             return View();
         }
 
+        public IActionResult PublicTrees()
+        {
+            return View();
+        }
+
+        public IActionResult MyTrees()
+        {
+            return View();
+        }
+
         public JsonResult GetTestGenTree()
         {
             return new JsonResult(DbProvider.GetTestGenTree());
+        }
+
+        public JsonResult GetSimpleTestGenTree()
+        {
+            return new JsonResult(DbProvider.GetSimpleTestGenTree());
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        public IActionResult TestTree()
+        {
+            return View();
+        }
+
+        public JsonResult GetTestTree()
+        {
+            var genTree = DbProvider.GetTestGenTree();
+            return new JsonResult(genTree);
         }
     }
 }

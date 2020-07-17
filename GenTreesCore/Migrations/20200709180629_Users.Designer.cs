@@ -4,14 +4,16 @@ using GenTreesCore.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace GenTreesCore.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20200709180629_Users")]
+    partial class Users
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -71,26 +73,18 @@ namespace GenTreesCore.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("GenTreeDateTimeSettingId")
+                    b.Property<int?>("DateTimeSettingsId")
                         .HasColumnType("int");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("IsPrivate")
-                        .HasColumnType("bit");
-
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("OwnerId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("GenTreeDateTimeSettingId");
-
-                    b.HasIndex("OwnerId");
+                    b.HasIndex("DateTimeSettingsId");
 
                     b.ToTable("GenTrees");
                 });
@@ -108,8 +102,8 @@ namespace GenTreesCore.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<uint>("YearMonthCount")
-                        .HasColumnType("int");
+                    b.Property<long>("YearMonthCount")
+                        .HasColumnType("bigint");
 
                     b.HasKey("Id");
 
@@ -177,42 +171,6 @@ namespace GenTreesCore.Migrations
                     b.HasDiscriminator<string>("RelationType").HasValue("Relation");
                 });
 
-            modelBuilder.Entity("GenTreesCore.Entities.User", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("DateCreated")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("EmailConfirmed")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsAdmin")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("LastVisit")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Login")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PasswordHash")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Salt")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Users");
-                });
-
             modelBuilder.Entity("GenTreesCore.Entities.ChildRelation", b =>
                 {
                     b.HasBaseType("GenTreesCore.Entities.Relation");
@@ -258,13 +216,9 @@ namespace GenTreesCore.Migrations
 
             modelBuilder.Entity("GenTreesCore.Entities.GenTree", b =>
                 {
-                    b.HasOne("GenTreesCore.Entities.GenTreeDateTimeSetting", "GenTreeDateTimeSetting")
+                    b.HasOne("GenTreesCore.Entities.GenTreeDateTimeSetting", "DateTimeSettings")
                         .WithMany()
-                        .HasForeignKey("GenTreeDateTimeSettingId");
-
-                    b.HasOne("GenTreesCore.Entities.User", "Owner")
-                        .WithMany()
-                        .HasForeignKey("OwnerId");
+                        .HasForeignKey("DateTimeSettingsId");
                 });
 
             modelBuilder.Entity("GenTreesCore.Entities.Person", b =>
