@@ -18,10 +18,10 @@ class TestTreePage extends React.Component {
     }
 }
 
-    const TodoComponent = {
-        width: "1700px",
-        margin: "30px auto",
-        minHeight: "200px"
-    };
+const TodoComponent = {
+    width: "1700px",
+    margin: "30px auto",
+    minHeight: "200px"
+};
 
 ReactDOM.render(<TestTreePage />, document.getElementById('root'));
