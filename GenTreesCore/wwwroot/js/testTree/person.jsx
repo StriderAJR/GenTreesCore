@@ -48,10 +48,10 @@ class Person extends React.Component {
                 <div className="card" style={TodoComponent} key={this.state.data.id}>
                     
                     <div className="card-body">
-                        <p className="card-text">{this.state.data.name}</p>
+                        <p className="card-text">{this.state.data.lastName} {this.state.data.firstName} {this.state.data.middleName}</p>
                         <p className="card-text">Gender: {this.state.data.gender}</p>
-                        <p className="card-text">Date of birth: {this.state.data.dateBirth}</p>
-
+                        <p className="card-text">Date of birth: {this.state.data.birthDate}</p>
+                        <p className="card-text">Date of death: {this.state.data.deathDate}</p>
                     </div>
                     <div class="card-footer">
                         <small className="text-muted">Last updated ~~~</small>

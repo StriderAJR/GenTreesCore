@@ -46,7 +46,7 @@ class PublicTreesPage extends React.Component {
             );
         } else {
             return (
-                <div className="card-deck">
+                <div className="row row-cols-1 row-cols-md-3">
                     {data.map(tree => {
                         return (
                             <TreeCard tree={tree} image={testData} />

@@ -3,6 +3,12 @@ import Heading from './heading'
 import GenTree from './genTree'
 
 class TestTreePage extends React.Component {
+    constructor(props) {
+        super(props);
+
+        //this.state = { link: props.treeUser};
+    }
+
     render() {
         return (
             <div>
