@@ -12,6 +12,7 @@ using JsonSubTypes;
 using GenTreesCore.Services;
 using System.Collections.Generic;
 using System;
+using System.Security.Cryptography;
 
 namespace GenTreesCore.Controllers
 {
@@ -70,7 +71,7 @@ namespace GenTreesCore.Controllers
                 {
                     Id = tree.Id,
                     Name = tree.Name,
-                    Description = tree.Description.Substring(0,100),
+                    Description = ShortenDescription(tree.Description, 100),
                     Creator = tree.Owner.Login,
                     LastUpdated = tree.LastUpdated.ToString("d/mm/yyyy"),
                     Image = tree.Image
@@ -92,7 +93,7 @@ namespace GenTreesCore.Controllers
                 {
                     Id = tree.Id,
                     Name = tree.Name,
-                    Description = tree.Description.Substring(0, 100),
+                    Description = ShortenDescription(tree.Description, 100),
                     DateCreated = tree.DateCreated.ToString("d/mm/yyyy"),
                     LastUpdated = tree.LastUpdated.ToString("d/mm/yyyy"),
                     Image = tree.Image
@@ -189,7 +190,15 @@ namespace GenTreesCore.Controllers
                     treeModel.Persons.Add(personModel);
                 }
 
-            return Ok(ToJson(treeModel));
+            return Ok(Json(treeModel));
+        }
+
+        private string ShortenDescription(string description, int length)
+        {
+            if (description == null)
+                return null;
+
+            return description.Substring(0, Math.Min(length, description.Length));
         }
 
         private string ToJson(GenTreeViewModel tree)
