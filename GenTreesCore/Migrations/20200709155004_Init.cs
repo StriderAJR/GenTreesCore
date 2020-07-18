@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
+using System;
 
 namespace GenTreesCore.Migrations
 {
@@ -9,18 +10,79 @@ namespace GenTreesCore.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "Users",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Login = table.Column<string>(maxLength: 255),
+                    PasswordHash = table.Column<string>(maxLength: 128),
+                    Salt = table.Column<string>(maxLength: 16),
+                    Email = table.Column<string>(maxLength: 255),
+                    EmailConfirmed = table.Column<bool>(),
+                    DateCreated = table.Column<DateTime>(),
+                    LastVisit = table.Column<DateTime>(),
+                    Role = table.Column<string>(maxLength: 32)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Users", t => t.Id);
+                });
+
+            migrationBuilder.CreateTable(
                name: "GenTreeDateTimeSettings",
                columns: table => new
                {
                    Id = table.Column<int>()
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                   Name = table.Column<string>(maxLength: 100),
-                   YearMonthCount = table.Column<uint>(),
-                   Eras_json = table.Column<string>()
+                   Name = table.Column<string>(maxLength: 255),
+                   YearMonthCount = table.Column<int>(),
+                   OwnerId = table.Column<int>(),
+                   IsPrivate = table.Column<bool>()
                },
                constraints: table =>
                {
                    table.PrimaryKey("PK_GenTreeDateTimeSettings", t => t.Id);
+                   table.ForeignKey("FK_GenTreeDateTimeSettings_Users", t => t.OwnerId, "Users","Id");
+               });
+
+            migrationBuilder.CreateTable(
+               name: "GenTreeEras",
+               columns: table => new
+               {
+                   Id = table.Column<int>()
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                   GenTreeDateTimeSettingId = table.Column<int>(),
+                   Name = table.Column<string>(maxLength: 255),
+                   ShortName = table.Column<string>(maxLength: 32),
+                   Description = table.Column<string>(nullable : true, maxLength: 1024),
+                   ThroughBeginYear = table.Column<int>(),
+                   YearCount = table.Column<int>()
+               },
+               constraints: table =>
+               {
+                   table.PrimaryKey("PK_GenTreeEras", t => t.Id);
+                   table.ForeignKey("FK_GenTreeEras_GenTreeDateTimeSettings", t => t.GenTreeDateTimeSettingId, "GenTreeDateTimeSettings", "Id");
+               });
+
+            migrationBuilder.CreateTable(
+               name: "GenTreeDates",
+               columns: table => new
+               {
+                   Id = table.Column<int>()
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                   EraId = table.Column<int>(),
+                   Year = table.Column<int>(),
+                   Month = table.Column<int>(),
+                   Day = table.Column<int>(),
+                   Hour = table.Column<int>(),
+                   Minute = table.Column<int>(),
+                   Second = table.Column<int>()
+               },
+               constraints: table =>
+               {
+                   table.PrimaryKey("PK_GenTreeDates", t => t.Id);
+                   table.ForeignKey("FK_GenTreeDates_GenTreeEras", t => t.EraId, "GenTreeEras", "Id");
                });
 
             migrationBuilder.CreateTable(
@@ -29,15 +91,21 @@ namespace GenTreesCore.Migrations
                 {
                     Id = table.Column<int>()
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(),
-                    Description = table.Column<string>(nullable: true),
+                    Name = table.Column<string>(maxLength: 255),
+                    Description = table.Column<string>(nullable: true, maxLength: 4096),
                     GenTreeDateTimeSettingId = table.Column<int>(),
-                    IsPrivate = table.Column<bool>()
+                    DateCreated = table.Column<DateTime>(),
+                    LastUpdated = table.Column<DateTime>(),
+                    OwnerId = table.Column<int>(),
+                    IsPrivate = table.Column<bool>(),
+                    Image = table.Column<string>(maxLength: 255, nullable: true)
+
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_GenTrees", t => t.Id);
                     table.ForeignKey("FK_GenTrees_DateTimeSettings", t => t.GenTreeDateTimeSettingId, "GenTreeDateTimeSettings", "Id");
+                    table.ForeignKey("FK_GenTrees_Users", t => t.OwnerId, "Users", "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -47,18 +115,22 @@ namespace GenTreesCore.Migrations
                    Id = table.Column<int>()
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                    GenTreeId = table.Column<int>(),
-                   LastName = table.Column<string>(maxLength: 80),
-                   FirstName = table.Column<string>(maxLength: 80),
-                   MiddleName = table.Column<string>(nullable: true, maxLength: 80),
-                   BirthDate_json = table.Column<string>(nullable: true),
-                   DeathDate_json = table.Column<string>(nullable: true),
-                   BirthPlace = table.Column<string>(nullable: true, maxLength: 200),
-                   Biography = table.Column<string>(nullable: true)
+                   LastName = table.Column<string>(maxLength: 255),
+                   FirstName = table.Column<string>(maxLength: 255),
+                   MiddleName = table.Column<string>(nullable: true, maxLength: 255),
+                   Gender = table.Column<string>(nullable: true, maxLength: 255),
+                   BirthDateId = table.Column<int>(nullable: true),
+                   DeathDateId = table.Column<int>(nullable: true),
+                   BirthPlace = table.Column<string>(nullable: true, maxLength: 255),
+                   Biography = table.Column<string>(nullable: true, maxLength: 4096),
+                   Image = table.Column<string>(nullable: true, maxLength: 255)
                },
                constraints: table =>
                {
                    table.PrimaryKey("PK_Persons", t => t.Id);
                    table.ForeignKey("FK_Persons_GenTrees", t => t.GenTreeId, "GenTrees", "Id");
+                   table.ForeignKey("FK_Persons_GenTreeDateTime_BirthDate", t => t.BirthDateId, "GenTreeDates", "Id");
+                   table.ForeignKey("FK_Persons_GenTreeDateTime_DeathDate", t => t.DeathDateId, "GenTreeDates", "Id");
                });
 
             migrationBuilder.CreateTable(
@@ -68,7 +140,8 @@ namespace GenTreesCore.Migrations
                   Id = table.Column<int>()
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                   GenTreeId = table.Column<int>(),
-                  Name = table.Column<string>(maxLength: 100)
+                  Name = table.Column<string>(maxLength: 255),
+                  Type = table.Column<string>(maxLength: 64)
               },
               constraints: table =>
               {
@@ -84,7 +157,7 @@ namespace GenTreesCore.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                   PersonId = table.Column<int>(),
                   TemplateId = table.Column<int>(),
-                  Value = table.Column<string>()
+                  Value = table.Column<string>(maxLength: 512)
               },
               constraints: table =>
               {
@@ -101,7 +174,7 @@ namespace GenTreesCore.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                    SourcePersonId = table.Column<int>(),
                    TargetPersonId = table.Column<int>(),
-                   RelationType = table.Column<string>(maxLength: 100),
+                   RelationType = table.Column<string>(maxLength: 64),
                    IsFinished = table.Column<bool>(nullable: true),
                    SecondParentId = table.Column<int>(nullable: true),
                    RelationRate = table.Column<string>(nullable: true)
@@ -117,12 +190,17 @@ namespace GenTreesCore.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable("Relations");
             migrationBuilder.DropTable("CustomPersonDescriptions");
+            migrationBuilder.DropTable("CustomPersonDescriptionTemplates");      
+            migrationBuilder.DropTable("Relations");
             migrationBuilder.DropTable("Persons");
-            migrationBuilder.DropTable("CustomPersonDescriptionTemplates");
             migrationBuilder.DropTable("GenTrees");
+
+            migrationBuilder.DropTable("GenTreeDates");
+            migrationBuilder.DropTable("GenTreeEras");
             migrationBuilder.DropTable("GenTreeDateTimeSettings");
+
+            migrationBuilder.DropTable("Users");
         }
     }
 }
