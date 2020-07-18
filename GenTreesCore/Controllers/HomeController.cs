@@ -24,7 +24,15 @@ namespace GenTreesCore.Controllers
             return View();
         }
 
+        public IActionResult PublicTrees()
+        {
+            return View();
+        }
 
+        public IActionResult MyTrees()
+        {
+            return View();
+        }
 
         public JsonResult GetTestGenTree()
         {

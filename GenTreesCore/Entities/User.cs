@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
-using System;
+﻿using System;
 
 namespace GenTreesCore.Entities
 {
@@ -13,9 +12,7 @@ namespace GenTreesCore.Entities
         public bool EmailConfirmed { get; set; }
         public DateTime DateCreated { get; set; }
         public DateTime LastVisit { get; set; }
-        public bool IsAdmin { get; set; }
-        //public string Role { get; set }
-
+        public Role Role { get; set; }
     }
 
     public enum Role
