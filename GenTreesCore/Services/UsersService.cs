@@ -8,32 +8,33 @@ using GenTreesCore.Entities;
 
 namespace GenTreesCore.Services
 {
-    public interface IUserService
-    {
-        void Register(string login, string email, string password);
-        User LogIn(string login, string password);
-        bool LoginIsRegistered(string login);
-        bool EmailIsRegistered(string email);
-        bool EmailIsConfirmed(string login);
-    }
-
     /// <summary>
     /// Класс, реализующий действия с пользователями
     /// </summary>
-    public class UserService : IUserService
+    public class UserService
     {
-        private ApplicationContext _db;
+        private ApplicationContext db;
 
         public UserService(ApplicationContext db)
         {
-            _db = db;
+            this.db = db;
+        }
+
+        public User GetUserByLogin(string login)
+        {
+            return db.Users.FirstOrDefault(u => u.Login == login);
+        }
+
+        public User GetUserById(int id)
+        {
+            return db.Users.FirstOrDefault(u => u.Id == id);
         }
 
         public void Register(string login, string email, string password)
         {
             var salt = GenerateSalt();
             var hash = GetPasswordHash(password, salt);
-            _db.Users.Add(
+            db.Users.Add(
                 new User
                 {
                     Login = login,
@@ -45,26 +46,26 @@ namespace GenTreesCore.Services
                     LastVisit = DateTime.Now,
                     Role = Role.User 
                 });
-            _db.SaveChangesAsync();
+            db.SaveChangesAsync();
         }
 
         public bool LoginIsRegistered(string login)
         {
-            return _db.Users.FirstOrDefault(x => x.Login == login) != null;
+            return db.Users.FirstOrDefault(x => x.Login == login) != null;
         }
 
         public bool EmailIsRegistered(string email)
         {
-            return _db.Users.FirstOrDefault(x => x.Email == email) != null;
+            return db.Users.FirstOrDefault(x => x.Email == email) != null;
         }
         public bool EmailIsConfirmed(string login)
         {
-            return _db.Users.FirstOrDefault(x => x.Login == login && x.EmailConfirmed) != null;
+            return db.Users.FirstOrDefault(x => x.Login == login && x.EmailConfirmed) != null;
         }
 
         public User LogIn(string login, string password)
         {
-            var user = _db.Users.FirstOrDefault(x => x.Login == login);
+            var user = db.Users.FirstOrDefault(x => x.Login == login);
 
             if (user == null)
                 return null;
@@ -74,8 +75,8 @@ namespace GenTreesCore.Services
                 return null;
 
             user.LastVisit = DateTime.Now;
-            _db.Users.Update(user);
-            _db.SaveChanges();
+            db.Users.Update(user);
+            db.SaveChanges();
             return user;
         }
         private string GenerateSalt()

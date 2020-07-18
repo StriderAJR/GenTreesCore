@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using GenTreesCore.Models;
 using GenTreesCore.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace GenTreesCore.Controllers
 {
@@ -19,20 +16,13 @@ namespace GenTreesCore.Controllers
             _logger = logger;
         }
 
-        public IActionResult Index()
-        {
-            return View();
-        }
+        public IActionResult Index() => View();
+        public IActionResult PublicTrees() => View();
 
-        public IActionResult PublicTrees()
-        {
-            return View();
-        }
+        [Authorize]
+        public IActionResult MyTrees() => View();
 
-        public IActionResult MyTrees()
-        {
-            return View();
-        }
+        public IActionResult TestTree() => View();
 
         public JsonResult GetTestGenTree()
         {
@@ -48,11 +38,6 @@ namespace GenTreesCore.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
-
-        public IActionResult TestTree()
-        {
-            return View();
         }
 
         public JsonResult GetTestTree()
