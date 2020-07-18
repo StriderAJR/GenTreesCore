@@ -4,25 +4,11 @@ using Microsoft.AspNetCore.Mvc;
 using GenTreesCore.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
-<<<<<<< Updated upstream
-using Microsoft.ClearScript;
-using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
-using System.Text.Json;
-=======
-<<<<<<< Updated upstream
-=======
-using Newtonsoft.Json;
->>>>>>> Stashed changes
 using JsonSubTypes;
 using GenTreesCore.Services;
 using System.Collections.Generic;
 using System;
-<<<<<<< Updated upstream
-using System.Security.Cryptography;
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
 
 namespace GenTreesCore.Controllers
 {
@@ -81,22 +67,10 @@ namespace GenTreesCore.Controllers
                 {
                     Id = tree.Id,
                     Name = tree.Name,
-<<<<<<< Updated upstream
-                    Description = ShortenDescription(tree.Description, 100),
-                    Creator = tree.Owner.Login,
-                    LastUpdated = tree.LastUpdated.ToString("d/mm/yyyy"),
-                    Image = tree.Image
-=======
-<<<<<<< Updated upstream
-                    Description = tree.Description,
-                    Creator = tree.Owner.Login
-=======
                     Description = ShortenDescription(tree.Description, 100),
                     Creator = tree.Owner.Login,
                     LastUpdated = tree.LastUpdated.ToString("d/MM/yyyy"),
                     Image = tree.Image
->>>>>>> Stashed changes
->>>>>>> Stashed changes
                 })
                 .ToList();
 
@@ -115,22 +89,10 @@ namespace GenTreesCore.Controllers
                 {
                     Id = tree.Id,
                     Name = tree.Name,
-<<<<<<< Updated upstream
-                    Description = ShortenDescription(tree.Description, 100),
-                    DateCreated = tree.DateCreated.ToString("d/mm/yyyy"),
-                    LastUpdated = tree.LastUpdated.ToString("d/mm/yyyy"),
-                    Image = tree.Image
-=======
-<<<<<<< Updated upstream
-                    Description = tree.Description,
-                    Creator = tree.Owner.Login
-=======
                     Description = ShortenDescription(tree.Description, 100),
                     DateCreated = tree.DateCreated.ToString("d/MM/yyyy"),
                     LastUpdated = tree.LastUpdated.ToString("d/MM/yyyy"),
                     Image = tree.Image
->>>>>>> Stashed changes
->>>>>>> Stashed changes
                 })
                 .ToList();
 
@@ -140,47 +102,6 @@ namespace GenTreesCore.Controllers
         [HttpGet("trees/gentree")]
         public IActionResult GetGenTree(int id)
         {
-<<<<<<< Updated upstream
-            int? authorizedUserId = null;
-            if (HttpContext.User.Identity.IsAuthenticated)
-                authorizedUserId = int.Parse(HttpContext.User.Identity.Name);
-
-            var tree = treesService.GetGenTree(id);
-
-            if (tree == null)
-                return BadRequest($"no tree with id {id} found");
-            if (tree.IsPrivate && tree.Owner.Id != authorizedUserId)
-                return BadRequest("access denied");
-
-            var treeModel = new GenTreeViewModel
-            {
-                Id = tree.Id,
-                Name = tree.Name,
-                Description = tree.Description,
-                Creator = tree.Owner.Login,
-                CanEdit = tree.Owner.Id == authorizedUserId,
-                DateCreated = tree.DateCreated.ToString("d/mm/yyyy"),
-                LastUpdated = tree.LastUpdated.ToString("d/mm/yyyy"),
-                Image = tree.Image,
-                DescriptionTemplates = tree.CustomPersonDescriptionTemplates,
-                Persons = new List<PersonViewModel>()
-            };
-
-            if (tree.Persons != null)
-                foreach (var person in tree.Persons)
-                {
-=======
-<<<<<<< Updated upstream
-            var trees = db.GenTrees
-                .Where(tree => !tree.IsPrivate && tree.Owner.Login == login)
-                .Select(tree => new GenTreeListItemViewModel
-                {
-                    Name = tree.Name,
-                    Description = tree.Description,
-                    Creator = tree.Owner.Login
-                })
-                .ToList();
-=======
             int? authorizedUserId = null;
             if (HttpContext.User.Identity.IsAuthenticated)
                 authorizedUserId = int.Parse(HttpContext.User.Identity.Name);
@@ -209,7 +130,6 @@ namespace GenTreesCore.Controllers
             if (tree.Persons != null)
                 foreach (var person in tree.Persons)
                 {
->>>>>>> Stashed changes
                     var personModel = new PersonViewModel
                     {
                         Id = person.Id,
@@ -231,8 +151,6 @@ namespace GenTreesCore.Controllers
                         personModel.DeathDate = person.DeathDate.ToDateTimeString();
                         personModel.ShortDeathDate = person.DeathDate.ToShortDateTimeString();
                     }
-<<<<<<< Updated upstream
-=======
 
                     if (person.Relations != null)
                         foreach (var relation in person.Relations)
@@ -268,7 +186,7 @@ namespace GenTreesCore.Controllers
                     treeModel.Persons.Add(personModel);
                 }
 
-            return Ok(ToJson(treeModel));
+            return Ok(JsonConvert.SerializeObject(treeModel));
         }
 
         private string ShortenDescription(string description, int length)
@@ -277,80 +195,6 @@ namespace GenTreesCore.Controllers
                 return null;
 
             return description.Substring(0, Math.Min(length, description.Length));
-        }
-
-        private string ToJson(GenTreeViewModel tree)
-        {
-            var settings = new JsonSerializerSettings();
-            settings.Converters.Add(JsonSubtypesConverterBuilder
-                .Of(typeof(Relation), "Type")
-                .RegisterSubtype(typeof(ChildRelation), "ChildRelation")
-                .RegisterSubtype(typeof(SpouseRelation), "SpouseRelation")
-                .SerializeDiscriminatorProperty()
-                .Build());
-
-            settings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
->>>>>>> Stashed changes
->>>>>>> Stashed changes
-
-                    if (person.Relations != null)
-                        foreach (var relation in person.Relations)
-                        {
-                            if (relation is ChildRelation)
-                            {
-                                var childRelation = relation as ChildRelation;
-                                var childRelationModel = new ChildRelationViewModel
-                                {
-                                    Id = relation.Id,
-                                    TargetPersonId = relation.TargetPerson.Id,
-                                    SecondParentId = null,
-                                    RelationRate = childRelation.RelationRate.ToString(),
-                                    RelationType = "Child"
-                                };
-                                if (childRelation.SecondParent != null)
-                                    childRelationModel.SecondParentId = childRelation.SecondParent.Id;
-                                personModel.Relations.Add(childRelationModel);
-                            }
-                            else
-                            {
-                                personModel.Relations.Add(new SpouseRelationViewModel
-                                {
-                                    Id = relation.Id,
-                                    TargetPersonId = relation.TargetPerson.Id,
-                                    IsFinished = (relation as SpouseRelation).IsFinished,
-                                    RelationType = "Spouse"                                    
-                                });
-                            }
-                        }
-                    else
-                        person.Relations = null;
-                    treeModel.Persons.Add(personModel);
-                }
-
-            return Ok(Json(treeModel));
-        }
-
-        private string ShortenDescription(string description, int length)
-        {
-            if (description == null)
-                return null;
-
-            return description.Substring(0, Math.Min(length, description.Length));
-        }
-
-        private string ToJson(GenTreeViewModel tree)
-        {
-            var settings = new JsonSerializerSettings();
-            settings.Converters.Add(JsonSubtypesConverterBuilder
-                .Of(typeof(Relation), "Type")
-                .RegisterSubtype(typeof(ChildRelation), "ChildRelation")
-                .RegisterSubtype(typeof(SpouseRelation), "SpouseRelation")
-                .SerializeDiscriminatorProperty()
-                .Build());
-
-            settings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-
-            return JsonConvert.SerializeObject(tree, settings);
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -52,19 +51,12 @@ namespace GenTreesCore.Controllers
             return RedirectToAction("Index", "Home");
         }   
 
-<<<<<<< Updated upstream
-=======
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
         [HttpGet]
         public bool IsLoggedIn()
         {
             return HttpContext.User.Identity.IsAuthenticated;
         }
 
-<<<<<<< Updated upstream
-=======
         [Authorize]
         [HttpGet]
         public async Task<IActionResult> Logout()
@@ -73,8 +65,6 @@ namespace GenTreesCore.Controllers
             return RedirectToAction("Index", "Home");
         }
 
->>>>>>> Stashed changes
->>>>>>> Stashed changes
         private async Task Authenticate(string login)
         {
             var userId = userService.GetUserByLogin(login).Id;

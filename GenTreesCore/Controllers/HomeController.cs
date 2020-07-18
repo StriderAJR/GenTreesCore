@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using GenTreesCore.Models;
@@ -21,29 +17,12 @@ namespace GenTreesCore.Controllers
         }
 
         public IActionResult Index() => View();
-
-<<<<<<< Updated upstream
-
-<<<<<<< Updated upstream
-        public IActionResult PublicTrees()
-        {
-            return View();
-        }
-
-        public IActionResult MyTrees()
-        {
-            return View();
-        }
-=======
-=======
         public IActionResult PublicTrees() => View();
 
         [Authorize]
         public IActionResult MyTrees() => View();
 
         public IActionResult TestTree() => View();
->>>>>>> Stashed changes
->>>>>>> Stashed changes
 
         public JsonResult GetTestGenTree()
         {
