@@ -18,9 +18,13 @@ class TreeCard extends React.Component {
         this.setState({ show: !this.state.show });
     }
 
+    handleClick() {
+        console.log('clicked');
+    }
+
     render() {
         return (
-            <div className="card" key={this.state.data.id}>
+            <div className="card" key={this.state.data.id} onClick={(e) => this.handleClick(e)}>
                 <div className="card-header">
                     <button type="button" className="close" data-dismiss="alert" aria-label="Close" onClick={(e) => this.handleShow(e)}>
                         <span aria-hidden="true">×</span>
