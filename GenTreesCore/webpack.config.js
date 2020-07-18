@@ -5,7 +5,8 @@ module.exports = {
         index: './wwwroot/js/index/index.jsx',
         login: './wwwroot/js/login/login.jsx',
         testTree: './wwwroot/js/testTree/testTree.jsx',
-        publicTrees: './wwwroot/js/publicTrees/public_Trees.jsx'
+        publicTrees: './wwwroot/js/publicTrees/public_Trees.jsx',
+        myTrees: './wwwroot/js/myTrees/myTrees.jsx'
     },
     output: {
         path: path.resolve(__dirname, './wwwroot/js/dist'),
