@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using GenTreesCore.Models;
 using GenTreesCore.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace GenTreesCore.Controllers
 {
@@ -19,11 +20,11 @@ namespace GenTreesCore.Controllers
             _logger = logger;
         }
 
-        public IActionResult Index()
-        {
-            return View();
-        }
+        public IActionResult Index() => View();
 
+<<<<<<< Updated upstream
+
+<<<<<<< Updated upstream
         public IActionResult PublicTrees()
         {
             return View();
@@ -33,6 +34,16 @@ namespace GenTreesCore.Controllers
         {
             return View();
         }
+=======
+=======
+        public IActionResult PublicTrees() => View();
+
+        [Authorize]
+        public IActionResult MyTrees() => View();
+
+        public IActionResult TestTree() => View();
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
 
         public JsonResult GetTestGenTree()
         {
@@ -48,11 +59,6 @@ namespace GenTreesCore.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
-
-        public IActionResult TestTree()
-        {
-            return View();
         }
 
         public JsonResult GetTestTree()
