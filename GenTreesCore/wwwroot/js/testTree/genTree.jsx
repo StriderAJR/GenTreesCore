@@ -4,23 +4,71 @@ import Draggable from 'react-draggable'
 class GenTree extends React.Component {
     constructor(props) {
         super(props);
+
+        this.state = {
+            data: Object,
+            isLoading: false,
+        }
+    }
+
+    componentDidMount() {
+        var foo = localStorage.getItem("foo");
+        console.log(foo);
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', '/Trees/gentree?id='+foo, true); // замените адрес
+        xhr.send();
+        this.setState({ isLoading: true });
+
+        xhr.onreadystatechange = () => {
+            if (xhr.readyState !== 4) {
+                return false;
+            }
+
+            if (xhr.status !== 200) {
+                console.log(xhr.status + ': ' + xhr.statusText);
+            } else {
+                this.setState({
+                    data: JSON.parse(xhr.responseText),
+                    isLoading: false,
+                });
+            }
+        }
     }
 
     renderPersons() {
-        return (
-            <div>    
-                {testData.map(pers => {
-                    return (
-                        <Person pers={pers} />
-                    );
-                })}  
-            </div>
-        );
+        const { data, isLoading } = this.state;
+        const d = deserialize(this.state.data);
+        if (isLoading) {
+            return (
+                <div className="d-flex justify-content-center">
+                    <div className="spinner-border" role="status">
+                        <span className="sr-only">Loading...</span>
+                    </div>
+                </div>
+            );
+        } else {
+            return (console.log(d)
+                //<div>
+                    
+                //</div>
+            );
+        }
+    }
+
+//{data.persons.map(pers => {
+//                        return (
+//                            <Person pers={pers} />
+//                        );
+//                    })}
+
+    logInf() {
+        var foo = localStorage.getItem("foo");
+        console.log("/Trees/gentree?id="+ foo);
     }
 
     render() {
         return (
-            <div>
+            <div onClick={(e) => this.logInf(e)}>
                 {this.renderPersons()}
             </div>
         );

@@ -41,7 +41,7 @@ class MyTreesPage extends React.Component {
     }
 
     renderProducts() {
-        const { data, isLoading } = this.state
+        const { data, isLoading } = this.state;
         if (isLoading) {
             return (
                 <div className="d-flex justify-content-center">
@@ -52,10 +52,10 @@ class MyTreesPage extends React.Component {
             );
         } else {
             return (
-                <div className="card-deck">
+                <div className="row row-cols-1 row-cols-md-3">
                     {data.map(tree => {
                         return (
-                            <TreeCard tree={tree} image={testData} />
+                            <TreeCard tree={tree} />
                         );
                     })}
                 </div>

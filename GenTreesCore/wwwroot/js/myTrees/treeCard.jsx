@@ -6,7 +6,6 @@ class TreeCard extends React.Component {
 
         this.state = {
             data: props.tree,
-            image: props.image,
             show: false
         };
 
@@ -20,33 +19,40 @@ class TreeCard extends React.Component {
 
     handleClick() {
         console.log('clicked');
+        localStorage.setItem("foo",  this.state.data.id);
+        window.location.assign('/Home/TestTree');
     }
 
     render() {
         return (
-            <div className="card" key={this.state.data.id} onClick={(e) => this.handleClick(e)}>
-                <div className="card-header">
-                    <button type="button" className="close" data-dismiss="alert" aria-label="Close" onClick={(e) => this.handleShow(e)}>
-                        <span aria-hidden="true">×</span>
-                        <span className="sr-only">Delete</span>
-                    </button>
-                    <ModalWindow onClose={(e) => this.handleShow()} show={this.state.show}>
-                        Are you sure you want to delete the tree?
-                    </ModalWindow>
-                </div>
-                <img className="card-img-top" src={this.state.image.imgUrl} alt={this.state.image.name}>  
-                </img>
-                <div className="card-body">
-                    <h4 className="card-title">{this.state.data.name}</h4>
-                    <p className="card-text">Date of creation: </p>
-                </div>
-                <div class="card-footer">
-                    <small className="text-muted">Last updated ~~~</small>
-                </div>
-            </div> 
+            <div className="col mb-4">
+                <div className="card h-100" key={this.state.data.id} onClick={(e) => this.handleClick(e)}>
+                    <div className="card-header">
+                        <button type="button" className="close" data-dismiss="alert" aria-label="Close" onClick={(e) => this.handleShow(e)}>
+                            <span aria-hidden="true">×</span>
+                            <span className="sr-only">Delete</span>
+                        </button>
+                        <ModalWindow onClose={(e) => this.handleShow()} show={this.state.show}>
+                            Are you sure you want to delete the tree?
+                        </ModalWindow>
+                    </div>
+                    <img className="card-img-top" src={this.state.data.image} />
+                    <div className="card-body">
+                        <h4 className="card-title">{this.state.data.name}</h4>
+                        <p className="card-text">Description: {this.state.data.description}</p>
+                        <p className="card-text">Date of creation: {this.state.data.dateCreated}</p>
+                    </div>
+                    <div class="card-footer">
+                        <small className="text-muted">Last updated ~ {this.state.data.lastUpdated}</small>
+                    </div>
+                </div> 
+            </div>
         );
     }
 }
+
+//var foo;
+//export default foo;
 
 //{this.state.data.dateCreate}
 //{this.state.data.dateLastChange}
