@@ -4,15 +4,11 @@ using Microsoft.AspNetCore.Mvc;
 using GenTreesCore.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
-using Microsoft.ClearScript;
-using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
-using System.Text.Json;
 using JsonSubTypes;
 using GenTreesCore.Services;
 using System.Collections.Generic;
 using System;
-using System.Security.Cryptography;
 
 namespace GenTreesCore.Controllers
 {
@@ -73,7 +69,7 @@ namespace GenTreesCore.Controllers
                     Name = tree.Name,
                     Description = ShortenDescription(tree.Description, 100),
                     Creator = tree.Owner.Login,
-                    LastUpdated = tree.LastUpdated.ToString("d/mm/yyyy"),
+                    LastUpdated = tree.LastUpdated.ToString("d/MM/yyyy"),
                     Image = tree.Image
                 })
                 .ToList();
@@ -94,8 +90,8 @@ namespace GenTreesCore.Controllers
                     Id = tree.Id,
                     Name = tree.Name,
                     Description = ShortenDescription(tree.Description, 100),
-                    DateCreated = tree.DateCreated.ToString("d/mm/yyyy"),
-                    LastUpdated = tree.LastUpdated.ToString("d/mm/yyyy"),
+                    DateCreated = tree.DateCreated.ToString("d/MM/yyyy"),
+                    LastUpdated = tree.LastUpdated.ToString("d/MM/yyyy"),
                     Image = tree.Image
                 })
                 .ToList();
@@ -124,8 +120,8 @@ namespace GenTreesCore.Controllers
                 Description = tree.Description,
                 Creator = tree.Owner.Login,
                 CanEdit = tree.Owner.Id == authorizedUserId,
-                DateCreated = tree.DateCreated.ToString("d/mm/yyyy"),
-                LastUpdated = tree.LastUpdated.ToString("d/mm/yyyy"),
+                DateCreated = tree.DateCreated.ToString("d/MM/yyyy"),
+                LastUpdated = tree.LastUpdated.ToString("d/MM/yyyy"),
                 Image = tree.Image,
                 DescriptionTemplates = tree.CustomPersonDescriptionTemplates,
                 Persons = new List<PersonViewModel>()
@@ -168,7 +164,7 @@ namespace GenTreesCore.Controllers
                                     TargetPersonId = relation.TargetPerson.Id,
                                     SecondParentId = null,
                                     RelationRate = childRelation.RelationRate.ToString(),
-                                    RelationType = "Child"
+                                    RelationType = "ChildRelation"
                                 };
                                 if (childRelation.SecondParent != null)
                                     childRelationModel.SecondParentId = childRelation.SecondParent.Id;
@@ -181,7 +177,7 @@ namespace GenTreesCore.Controllers
                                     Id = relation.Id,
                                     TargetPersonId = relation.TargetPerson.Id,
                                     IsFinished = (relation as SpouseRelation).IsFinished,
-                                    RelationType = "Spouse"                                    
+                                    RelationType = "SpouseRelation"                                    
                                 });
                             }
                         }
@@ -190,7 +186,7 @@ namespace GenTreesCore.Controllers
                     treeModel.Persons.Add(personModel);
                 }
 
-            return Ok(Json(treeModel));
+            return Ok(JsonConvert.SerializeObject(treeModel));
         }
 
         private string ShortenDescription(string description, int length)
@@ -199,21 +195,6 @@ namespace GenTreesCore.Controllers
                 return null;
 
             return description.Substring(0, Math.Min(length, description.Length));
-        }
-
-        private string ToJson(GenTreeViewModel tree)
-        {
-            var settings = new JsonSerializerSettings();
-            settings.Converters.Add(JsonSubtypesConverterBuilder
-                .Of(typeof(Relation), "Type")
-                .RegisterSubtype(typeof(ChildRelation), "ChildRelation")
-                .RegisterSubtype(typeof(SpouseRelation), "SpouseRelation")
-                .SerializeDiscriminatorProperty()
-                .Build());
-
-            settings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-
-            return JsonConvert.SerializeObject(tree, settings);
         }
     }
 }
