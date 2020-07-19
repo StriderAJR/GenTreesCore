@@ -7,7 +7,7 @@ class GenTree extends React.Component {
         super(props);
 
         this.state = {
-            data: Object,
+            data: null,
             isLoading: false,
         }
     }
@@ -38,7 +38,7 @@ class GenTree extends React.Component {
 
     renderPersons() {
         const { data, isLoading } = this.state;
-        const d = serialize(this.state.data.value);
+        //const d = serialize(this.state.data.value);
         if (isLoading) {
             return (
                 <div className="d-flex justify-content-center">
@@ -47,20 +47,24 @@ class GenTree extends React.Component {
                     </div>
                 </div>
             );
+        } else if (data == null)
+        {
+            return (<div></div>);
         } else {
-            return (console.log(data.value)
-                //<div>
-                    
-                //</div>
+            console.log(data.Persons);
+            return (
+                <div>
+                    {data.Persons.map(pers => {
+                        return (
+                            <Person pers={pers} />
+                        );
+                    })}
+                </div>
             );
         }
     }
 
-//{data.persons.map(pers => {
-//                        return (
-//                            <Person pers={pers} />
-//                        );
-//                    })}
+
 
     logInf() {
         var foo = localStorage.getItem("foo");
