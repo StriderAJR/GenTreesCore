@@ -1,5 +1,6 @@
 ﻿import Person from './person'
 import Draggable from 'react-draggable'
+import { serialize, deserialize } from "react-serialize"
 
 class GenTree extends React.Component {
     constructor(props) {
@@ -37,7 +38,7 @@ class GenTree extends React.Component {
 
     renderPersons() {
         const { data, isLoading } = this.state;
-        const d = deserialize(this.state.data);
+        const d = serialize(this.state.data.value);
         if (isLoading) {
             return (
                 <div className="d-flex justify-content-center">
@@ -47,7 +48,7 @@ class GenTree extends React.Component {
                 </div>
             );
         } else {
-            return (console.log(d)
+            return (console.log(data.value)
                 //<div>
                     
                 //</div>
