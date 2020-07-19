@@ -145,6 +145,7 @@ namespace GenTreesCore.Controllers
                 LastName = person.LastName,
                 FirstName = person.FirstName,
                 MiddleName = person.MiddleName,
+                Gender = person.Gender,
                 Biography = person.Biography,
                 Image = person.Image,
                 CustomDescriptions = person.CustomDescriptions
