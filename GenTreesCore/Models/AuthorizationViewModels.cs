@@ -32,10 +32,4 @@ namespace GenTreesCore.Models
         [Compare("Password", ErrorMessage = "Пароли не совпадают.")]
         public string ConfirmPassword { get; set; }
     }
-
-    public class ForgotPasswordViewModel
-    {
-        [Required]
-        public string Login { get; set; }
-    }
 }

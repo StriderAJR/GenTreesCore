@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -10,8 +8,6 @@ using GenTreesCore.Entities;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
-using System.Net.Http;
-using System.Net;
 
 namespace GenTreesCore.Controllers
 {
@@ -19,55 +15,40 @@ namespace GenTreesCore.Controllers
     [Route("/[controller]/[action]")]
     public class UsersController : Controller
     {
-        private IUserService userService;
-        private ApplicationContext db;
+        private UserService userService;
 
         public UsersController(ApplicationContext context)
         {
             userService = new UserService(context);
-            db = context;
         }
 
         [HttpGet]
-        public IActionResult Login()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        public IActionResult Login(LoginViewModel model)
-        {
-            User user = userService.LogIn(model.Login, model.Password);
-            if (user != null)
-            {
-                Authenticate(model.Login);   
-                return RedirectToAction("Index", "Home");
-            }
-            else
-            {
-                return new BadRequestObjectResult("login failed");
-            }
-        }
+        public IActionResult Login() => View();
 
         [HttpGet]
-        public IActionResult Register()
+        public IActionResult Register() => View();
+
+        [HttpPost]
+        public async Task<IActionResult> Login(LoginViewModel model)
         {
-            return View();
+            if (userService.LogIn(model.Login, model.Password) == null)
+                return BadRequest("login failed");
+
+            await Authenticate(model.Login);   
+            return RedirectToAction("Index", "Home");
         }
 
         [HttpPost]
-        public IActionResult Register(RegisterViewModel model)
+        public async Task<IActionResult> Register(RegisterViewModel model)
         {
             if (userService.LoginIsRegistered(model.Login))
-                return new BadRequestObjectResult("user alredy exists");
+                return BadRequest("user alredy exists");
             else if (userService.EmailIsRegistered(model.Email))
-                return new BadRequestObjectResult("email already exists");
-            else
-            {
-                userService.Register(model.Login, model.Email, model.Password);
-                Authenticate(model.Login);
-                return RedirectToAction("Index", "Home");
-            }
+                return BadRequest("email already exists");
+
+            userService.Register(model.Login, model.Email, model.Password);
+            await Authenticate(model.Login);
+            return RedirectToAction("Index", "Home");
         }   
 
         [HttpGet]
@@ -76,9 +57,17 @@ namespace GenTreesCore.Controllers
             return HttpContext.User.Identity.IsAuthenticated;
         }
 
+        [Authorize]
+        [HttpGet]
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return RedirectToAction("Index", "Home");
+        }
+
         private async Task Authenticate(string login)
         {
-            var userId = db.Users.FirstOrDefault(u => u.Login == login).Id;
+            var userId = userService.GetUserByLogin(login).Id;
             // создаем один claim
             var claims = new List<Claim>
             {
@@ -88,14 +77,6 @@ namespace GenTreesCore.Controllers
             ClaimsIdentity id = new ClaimsIdentity(claims, "ApplicationCookie", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
             // установка аутентификационных куки
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(id));
-        }
-
-        [Authorize]
-        [HttpGet]
-        public async Task<IActionResult> Logout()
-        {
-            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            return RedirectToAction("Index", "Home");
         }
     }
 }
