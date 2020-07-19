@@ -9,6 +9,8 @@
 
     handleClick() {
         console.log('clicked');
+        localStorage.setItem("foo", this.state.data.id);
+        window.location.assign('/Home/TestTree');
     }
 
     render() {

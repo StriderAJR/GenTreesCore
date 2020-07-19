@@ -16,6 +16,7 @@ class Person extends React.Component {
         this.handleDrag = this.handleDrag.bind(this);
         this.onStart = this.onStart.bind(this);
         this.onStop = this.onStop.bind(this);
+        this.getImage = this.getImage.bind(this);
         //this.handleShow = this.handleShow.bind(this);
     }
 
@@ -37,24 +38,29 @@ class Person extends React.Component {
         this.setState({ activeDrags: --this.state.activeDrags });
     }
 
-    //handleShow() {
-    //    console.log('clicked');
-    //    this.setState({ show: !this.state.show });
-    //}
+    handleShow() {
+        console.log('clicked');
+        this.setState({ show: !this.state.show });
+    }
+
+    getImage() {
+        if (this.state.data.Image == null) {
+            return noImage.imgUrl;
+        } else {
+            return this.state.data.Image;
+        }
+    }
 
     render() {
         return (
             <Draggable onStart={(e) => this.onStart(e)} onStop={(e) => this.onStop(e)}>
-                <div className="card" style={TodoComponent} key={this.state.data.id}>
-                    
+                <div className="card" style={TodoComponent} key={this.state.data.Id}>
+                    <img className="card-img-top" src={this.getImage()} />
                     <div className="card-body">
-                        <p className="card-text">{this.state.data.lastName} {this.state.data.firstName} {this.state.data.middleName}</p>
-                        <p className="card-text">Gender: {this.state.data.gender}</p>
-                        <p className="card-text">Date of birth: {this.state.data.birthDate}</p>
-                        <p className="card-text">Date of death: {this.state.data.deathDate}</p>
-                    </div>
-                    <div class="card-footer">
-                        <small className="text-muted">Last updated ~~~</small>
+                        <p className="card-text">{this.state.data.LastName} {this.state.data.FirstName} {this.state.data.MiddleName}</p>
+                        <p className="card-text">Gender: {this.state.data.Gender}</p>
+                        <p className="card-text">Date of birth: {this.state.data.ShortBirthDate}</p>
+                        <p className="card-text">Date of death: {this.state.data.ShortDeathDate}</p>
                     </div>
                 </div>     
             </Draggable>
@@ -71,9 +77,12 @@ class Person extends React.Component {
     }
 }
 
+const noImage = {
+    imgUrl: 'https://i.pinimg.com/originals/8a/eb/d8/8aebd875fbddd22bf3971c3a7159bdc7.png'
+};
+
 const TodoComponent = {
-    width: "230px",
-    height: "200px"
+    width: "230px"
 };
 
 export default Person
