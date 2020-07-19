@@ -16,7 +16,7 @@
     render() {
         return (
             <div className="col mb-4">
-                <div className="card h-100" key={this.state.data.id} onClick={(e) => this.handleClick(e)}>
+                <div className="card " key={this.state.data.id} onClick={(e) => this.handleClick(e)}>
                     <img className="card-img-top" src={this.state.data.image} />
                     <div className="card-body">
                         <h4 className="card-title">{this.state.data.name}</h4>

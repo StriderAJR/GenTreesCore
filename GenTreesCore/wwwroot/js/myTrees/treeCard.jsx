@@ -26,7 +26,7 @@ class TreeCard extends React.Component {
     render() {
         return (
             <div className="col mb-4">
-                <div className="card h-100" key={this.state.data.id}>
+                <div className="card " key={this.state.data.id}>
                     <div className="card-header">
                         <button type="button" className="close" data-dismiss="alert" aria-label="Close" onClick={(e) => this.handleShow(e)}>
                             <span aria-hidden="true">×</span>

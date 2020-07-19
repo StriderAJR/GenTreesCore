@@ -10,9 +10,8 @@ class IndexPage extends React.Component {
                 <Heading/>
                 <MenuBar/>
                 <MainArea
-                    name={testData.name}
                     text={testData.text}
-                    imgUrl={testData.imgUrl} />
+                    imgUrl={testData.imgUrl}/>
                 <Footer />
             </div>
         );
@@ -20,17 +19,17 @@ class IndexPage extends React.Component {
 }
 
 const testData = {
-    name: 'Avatar family',
-    text: 'Ipsum dolor sit amet, consectetur adipiscing elit.' +
-        'Vivamus a purus sit amet ante cursus rutrum eget sed nunc.Vestibulum id pretium mauris.' +
-        'Etiam tincidunt bibendum purus vel congue.Donec egestas egestas sapien.Suspendisse et risus ' +
-        'id diam sodales finibus sed at turpis.Maecenas eu metus gravida, egestas dui quis, auctor metus.' +
-        'Praesent libero lectus, lacinia vitae sapien sit amet, euismod facilisis mi.' +
-        'Vestibulum euismod quam nisi, vitae porttitor dui tincidunt a.Quisque sit amet ultrices dui.' +
-        'Ut vehicula dignissim leo id ultricies.Nunc a sollicitudin nisl.Sed feugiat et metus eu faucibus.' + '\n' +
-        'Praesent et euismod tortor, ultricies eleifend ante.Phasellus ante urna, imperdiet vel iaculis ut,' +
-        'ullamcorper sit amet ligula.Proin ornare mollis ligula, sed facilisis leo vestibulum et.',
-    imgUrl: 'https://i.pinimg.com/736x/ec/87/21/ec8721be95197e25509de03e13896fbe.jpg',
+    text: 'This is a web application where you can view or create genealogical trees. '+
+            'The tree consists of nodes on which people of the whole family are located.Each person has a name, '+
+            'surname, possibly a patronymic, often there are photographs, years of life. ' +
+            'More detailed trees also include a biography of the person. These people are linked by marital ' +
+            'ties and usually the spouses are located nearby, and close family ties, for example, children are also displayed. ' +
+            'Usually the tree is divided into several “floors”, each of which contains representatives of the same generation, ' +
+            'with the children located below the parents.\n' +
+            'On the top panel, you can see the "About", "Public Trees" and "Login" buttons. ' +
+            'You are now on the "About" page, you can also view public trees or log in to create your own tree. '+
+            'You must have an account to log in.',
+    imgUrl: '/img/mainPage.png'
 };
 
 ReactDOM.render(
