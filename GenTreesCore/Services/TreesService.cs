@@ -49,5 +49,19 @@ namespace GenTreesCore.Services
                 .Where(t => t.Id == treeId)
                 .FirstOrDefault();
         }
+
+        public void AddGenTree(int userId, string name, bool isPrivate)
+        {
+            var owner = db.Users.FirstOrDefault(u => u.Id == userId);
+            db.GenTrees.Add(new GenTree
+            {
+                Name = name,
+                IsPrivate = isPrivate,
+                DateCreated = DateTime.Now,
+                LastUpdated = DateTime.Now,
+                Owner = owner
+            });
+            db.SaveChanges();
+        }
     }
 }

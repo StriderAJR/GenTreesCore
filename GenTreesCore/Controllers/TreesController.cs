@@ -5,9 +5,7 @@ using GenTreesCore.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
-using JsonSubTypes;
 using GenTreesCore.Services;
-using System.Collections.Generic;
 using System;
 
 namespace GenTreesCore.Controllers
@@ -113,80 +111,92 @@ namespace GenTreesCore.Controllers
             if (tree.IsPrivate && tree.Owner.Id != authorizedUserId)
                 return BadRequest("access denied");
 
+            var treeModel = ToViewModel(tree);
+            treeModel.CanEdit = tree.Owner.Id == authorizedUserId;
+
+            return Ok(JsonConvert.SerializeObject(treeModel));
+        }
+
+        private GenTreeViewModel ToViewModel(GenTree tree)
+        {
             var treeModel = new GenTreeViewModel
             {
                 Id = tree.Id,
                 Name = tree.Name,
                 Description = tree.Description,
                 Creator = tree.Owner.Login,
-                CanEdit = tree.Owner.Id == authorizedUserId,
                 DateCreated = tree.DateCreated.ToString("d/MM/yyyy"),
                 LastUpdated = tree.LastUpdated.ToString("d/MM/yyyy"),
                 Image = tree.Image,
-                DescriptionTemplates = tree.CustomPersonDescriptionTemplates,
-                Persons = new List<PersonViewModel>()
+                DescriptionTemplates = tree.CustomPersonDescriptionTemplates
             };
 
             if (tree.Persons != null)
-                foreach (var person in tree.Persons)
-                {
-                    var personModel = new PersonViewModel
-                    {
-                        Id = person.Id,
-                        LastName = person.LastName,
-                        FirstName = person.FirstName,
-                        MiddleName = person.MiddleName,
-                        Biography = person.Biography,
-                        Image = person.Image,
-                        CustomDescriptions = person.CustomDescriptions,
-                        Relations = new List<RelationViewModel>()
-                    };
-                    if (person.BirthDate != null)
-                    {
-                        personModel.BirthDate = person.BirthDate.ToDateTimeString();
-                        personModel.ShortBirthDate = person.BirthDate.ToShortDateTimeString();
-                    }
-                    if (person.DeathDate != null)
-                    {
-                        personModel.DeathDate = person.DeathDate.ToDateTimeString();
-                        personModel.ShortDeathDate = person.DeathDate.ToShortDateTimeString();
-                    }
+                treeModel.Persons = tree.Persons.Select(p => ToViewModel(p)).ToList();
 
-                    if (person.Relations != null)
-                        foreach (var relation in person.Relations)
-                        {
-                            if (relation is ChildRelation)
-                            {
-                                var childRelation = relation as ChildRelation;
-                                var childRelationModel = new ChildRelationViewModel
-                                {
-                                    Id = relation.Id,
-                                    TargetPersonId = relation.TargetPerson.Id,
-                                    SecondParentId = null,
-                                    RelationRate = childRelation.RelationRate.ToString(),
-                                    RelationType = "ChildRelation"
-                                };
-                                if (childRelation.SecondParent != null)
-                                    childRelationModel.SecondParentId = childRelation.SecondParent.Id;
-                                personModel.Relations.Add(childRelationModel);
-                            }
-                            else
-                            {
-                                personModel.Relations.Add(new SpouseRelationViewModel
-                                {
-                                    Id = relation.Id,
-                                    TargetPersonId = relation.TargetPerson.Id,
-                                    IsFinished = (relation as SpouseRelation).IsFinished,
-                                    RelationType = "SpouseRelation"                                    
-                                });
-                            }
-                        }
-                    else
-                        person.Relations = null;
-                    treeModel.Persons.Add(personModel);
-                }
+            return treeModel;
+        }
 
-            return Ok(JsonConvert.SerializeObject(treeModel));
+        private PersonViewModel ToViewModel(Person person)
+        {
+            var personModel = new PersonViewModel
+            {
+                Id = person.Id,
+                LastName = person.LastName,
+                FirstName = person.FirstName,
+                MiddleName = person.MiddleName,
+                Gender = person.Gender,
+                Biography = person.Biography,
+                Image = person.Image,
+                CustomDescriptions = person.CustomDescriptions
+            };
+            if (person.BirthDate != null)
+            {
+                personModel.BirthDate = person.BirthDate.ToDateTimeString();
+                personModel.ShortBirthDate = person.BirthDate.ToShortDateTimeString();
+            }
+            if (person.DeathDate != null)
+            {
+                personModel.DeathDate = person.DeathDate.ToDateTimeString();
+                personModel.ShortDeathDate = person.DeathDate.ToShortDateTimeString();
+            }
+
+            if (person.Relations != null)
+                personModel.Relations = person.Relations.Select(r => ToViewModel(r)).ToList();
+            return personModel;
+        }
+
+        private RelationViewModel ToViewModel(Relation relation)
+        {
+            if (relation is ChildRelation)
+                return ToViewModel(relation as ChildRelation);
+            else
+                return ToViewModel(relation as SpouseRelation);
+        }
+        private ChildRelationViewModel ToViewModel(ChildRelation relation)
+        {
+            var childRelationModel = new ChildRelationViewModel
+            {
+                Id = relation.Id,
+                TargetPersonId = relation.TargetPerson.Id,
+                SecondParentId = null,
+                RelationRate = relation.RelationRate.ToString(),
+                RelationType = "ChildRelation"
+            };
+            if (relation.SecondParent != null)
+                childRelationModel.SecondParentId = relation.SecondParent.Id;
+            return childRelationModel;
+        }
+
+        private SpouseRelationViewModel ToViewModel(SpouseRelation relation)
+        {
+            return new SpouseRelationViewModel
+            {
+                Id = relation.Id,
+                TargetPersonId = relation.TargetPerson.Id,
+                IsFinished = relation.IsFinished,
+                RelationType = "SpouseRelation"
+            };
         }
 
         private string ShortenDescription(string description, int length)
