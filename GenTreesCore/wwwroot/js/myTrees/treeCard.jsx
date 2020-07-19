@@ -26,7 +26,7 @@ class TreeCard extends React.Component {
     render() {
         return (
             <div className="col mb-4">
-                <div className="card h-100" key={this.state.data.id} onClick={(e) => this.handleClick(e)}>
+                <div className="card h-100" key={this.state.data.id}>
                     <div className="card-header">
                         <button type="button" className="close" data-dismiss="alert" aria-label="Close" onClick={(e) => this.handleShow(e)}>
                             <span aria-hidden="true">×</span>
@@ -36,13 +36,15 @@ class TreeCard extends React.Component {
                             Are you sure you want to delete the tree?
                         </ModalWindow>
                     </div>
-                    <img className="card-img-top" src={this.state.data.image} />
-                    <div className="card-body">
-                        <h4 className="card-title">{this.state.data.name}</h4>
-                        <p className="card-text">Description: {this.state.data.description}</p>
-                        <p className="card-text">Date of creation: {this.state.data.dateCreated}</p>
+                    <div onClick={(e) => this.handleClick(e)}>
+                        <img className="card-img-top" src={this.state.data.image} />
+                        <div className="card-body">
+                            <h4 className="card-title">{this.state.data.name}</h4>
+                            <p className="card-text">Description: {this.state.data.description}</p>
+                            <p className="card-text">Date of creation: {this.state.data.dateCreated}</p>
+                        </div>
                     </div>
-                    <div class="card-footer">
+                    <div class="card-footer" onClick={(e) => this.handleClick(e)}>
                         <small className="text-muted">Last updated ~ {this.state.data.lastUpdated}</small>
                     </div>
                 </div> 

@@ -6,7 +6,7 @@
 //    )
 //}
 
-//import Footer from './footer'
+import Footer from './footer'
 //import IndexPage from '../index'
 
 class LogInPage extends React.Component {
@@ -102,6 +102,7 @@ class LogInPage extends React.Component {
                     </div>
                     <div className="col-md-3"></div>
                 </div>
+                <Footer />
             </div>
         );
     }
