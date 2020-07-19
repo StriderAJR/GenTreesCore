@@ -21,7 +21,7 @@
                 <hr />
                 <div class="footer-copyright text-center py-3">
                     © 2020 Copyright:
-            <a href="#!">Gen tree</a>
+            <a href="#!">Striding Soft</a>
                 </div>
             </footer>
         );

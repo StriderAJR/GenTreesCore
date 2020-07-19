@@ -21,7 +21,7 @@ class IndexPage extends React.Component {
 
 const testData = {
     name: 'Avatar family',
-    text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.' +
+    text: 'Ipsum dolor sit amet, consectetur adipiscing elit.' +
         'Vivamus a purus sit amet ante cursus rutrum eget sed nunc.Vestibulum id pretium mauris.' +
         'Etiam tincidunt bibendum purus vel congue.Donec egestas egestas sapien.Suspendisse et risus ' +
         'id diam sodales finibus sed at turpis.Maecenas eu metus gravida, egestas dui quis, auctor metus.' +

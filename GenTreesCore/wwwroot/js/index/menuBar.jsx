@@ -24,7 +24,7 @@
                 console.log(xhr.status + ': ' + xhr.statusText);
             } else {
                 this.setState({
-                    isAuthorized: true
+                    isAuthorized: JSON.parse(xhr.responseText)
                     //data: JSON.parse(xhr.responseText),
                     //isLoading: false,
                 });
@@ -45,6 +45,12 @@
     myTreesHandleClick() {
         console.log('clicked');
         window.location.assign('/Home/MyTrees');
+    }
+
+    signOutHandleClick() {
+        console.log('clicked');
+        this.setState({ isAuthorized: !this.state.isAuthorized });
+        window.location.assign('/users/logout');
     }
 
     render() {
@@ -90,7 +96,8 @@
                         </li>
                         <li className="nav-item" role="presentation">
                             <a className="flex-sm-fill text-sm-center nav-link btn btn-outline-primary" id="pills-signOut-tab" data-toggle="pill"
-                               href="#pills-signOut" role="tab" aria-controls="pills-signOut" aria-selected="false">Sign out</a>
+                                href="/users/logout" onClick={(e) => this.signOutHandleClick(e)}
+                                role="tab" aria-controls="pills-signOut" aria-selected="false">Sign out</a>
                         </li>
                     </ul>
                     <div className="tab-content" id="pills-tabContent">
