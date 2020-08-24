@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
+﻿
 namespace GenTreesCore.Entities
 {
     public abstract class Relation
     {
+        public int Id { get; set; }
         /// <summary>
         /// Человек, к которому применяется данное родство
         /// </summary>
@@ -30,10 +27,10 @@ namespace GenTreesCore.Entities
         /// <summary>
         /// Степень родства
         /// </summary>
-        public RealtionRate RealtionRate { get; set; }
+        public RelationRate RelationRate { get; set; }
     }
 
-    public enum RealtionRate
+    public enum RelationRate
     {
         /// <summary>
         /// Кровный родственник
